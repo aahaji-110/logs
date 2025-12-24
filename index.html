@@ -133,7 +133,7 @@
         /* شريط التقدم المطور */
         #progressContainer {
             background: #eee;
-            height: 25px; /* زيادة الطول ليظهر النص بداخلها */
+            height: 25px; 
             border-radius: 12px;
             margin-bottom: 5px;
             overflow: hidden;
@@ -221,9 +221,9 @@
     
     <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-img">
 
-    <h2>حاسبة المسعفين</h2>
+    <h2>حاسبة ساعات المسعفين</h2>
     
-    <span class="label">رقم معرف المسعف (Copy ID):</span>
+    <span class="label">رقم دسكورد المسعف Copy ID :</span>
     <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
 
     <span class="label">نوع الحسبة:</span>
@@ -245,7 +245,7 @@
     <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="liveUpdate()">
 
     <div class="btn-group">
-        <button onclick="calculateHours()">حساب وتوليد النص</button>
+        <button onclick="calculateHours()">حساب</button>
         <button class="reset-btn" onclick="resetForm()">تصفير</button>
     </div>
 
@@ -283,7 +283,6 @@
         }
     }
 
-    // تحديث مباشر للنسبة والباقي أثناء الكتابة
     function liveUpdate() {
         const logs = document.getElementById('logsCount').value;
         const calcType = document.querySelector('input[name="calcType"]:checked').value;
