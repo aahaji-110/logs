@@ -130,7 +130,6 @@
         .option-item:hover { border-color: var(--primary); }
         .option-item input { width: auto; margin: 0 0 0 8px; cursor: pointer; }
 
-        /* شريط التقدم المطور */
         #progressContainer {
             background: #eee;
             height: 25px; 
@@ -223,7 +222,7 @@
 
     <h2>حاسبة ساعات المسعفين</h2>
     
-    <span class="label">رقم دسكورد المسعف Copy ID :</span>
+    <span class="label">رقم دسكورد المسعف:</span>
     <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
 
     <span class="label">نوع الحسبة:</span>
@@ -251,7 +250,7 @@
 
     <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
     
-    <button id="copyBtn" class="copy-btn" onclick="copyFinalText()" style="display: none;">نسخ النص بالكامل</button>
+    <button id="copyBtn" class="copy-btn" onclick="copyFinalText()" style="display: none;">نسخ</button>
 
     <div class="footer">
         الحقوق الفكرية محفوظة باسم <br>
@@ -329,7 +328,7 @@ ${mention}`;
 
             resultArea.value = template;
             copyBtn.style.display = 'block';
-            copyBtn.innerText = "نسخ النص بالكامل";
+            copyBtn.innerText = "نسخ";
             copyBtn.style.backgroundColor = "var(--success)";
         } else {
             alert("يرجى إدخال عدد لوقات صحيح");
@@ -354,10 +353,10 @@ ${mention}`;
         const btn = document.getElementById('copyBtn');
         try {
             await navigator.clipboard.writeText(resultArea.value);
-            btn.innerText = "✅ تم النسخ بنجاح!";
+            btn.innerText = "✅ تم النسخ!";
             btn.style.backgroundColor = "#155724";
             setTimeout(() => {
-                btn.innerText = "نسخ النص بالكامل";
+                btn.innerText = "نسخ";
                 btn.style.backgroundColor = "var(--success)";
             }, 2000);
         } catch (err) {
