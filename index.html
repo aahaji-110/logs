@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة حساب ساعات المسعفين - </title>
+    <title>أداة حساب ساعات المسعفين - نظام الإنجاز</title>
     <style>
         :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #e67e22;
             --bg-body: #f4f7f6;
-            --bg-container: white;
+            --bg-card: #ffffff;
             --text-main: #2c3e50;
-            --border-color: #d1d1d1;
-            --input-bg: white;
+            --border: #d1d1d1;
+            --shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
 
         .dark-mode {
-            --bg-body: #1a1a1a;
-            --bg-container: #2d2d2d;
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
             --text-main: #ecf0f1;
-            --border-color: #444;
-            --input-bg: #3d3d3d;
+            --border: #333;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
 
         body {
@@ -31,14 +34,14 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         .container {
-            background: var(--bg-container);
+            background: var(--bg-card);
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
             width: 100%;
             max-width: 420px;
             text-align: center;
@@ -50,90 +53,162 @@
             top: 15px;
             left: 15px;
             cursor: pointer;
-            background: #eee;
-            padding: 5px 12px;
-            border-radius: 20px;
+            background: var(--bg-body);
+            padding: 6px 10px;
+            border-radius: 50px;
             font-size: 12px;
-            color: #333;
-            border: 1px solid #ccc;
-            font-weight: bold;
+            border: 1px solid var(--border);
+            user-select: none;
+            transition: 0.3s;
+            z-index: 10;
         }
 
-        .logo-img, .logo-bottom {
-            display: block;
-            margin: 0 auto 15px auto;
-            max-width: 180px;
-            height: auto;
+        .logo-img {
+            max-width: 140px;
+            margin-top: -10px; 
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        h2 { 
+            margin: 0 auto 25px auto;
+            font-size: 24px; 
+            border-bottom: 3px solid var(--primary);
+            display: table;
+            padding-bottom: 5px;
+            font-weight: 800;
         }
         
-        .logo-bottom { max-width: 110px; opacity: 0.7; margin-top: 25px; }
-
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        .label { 
+            font-weight: bold; 
+            margin-bottom: 8px; 
+            display: block; 
+            text-align: right; 
+            font-size: 14px; 
+        }
         
-        .label { font-weight: bold; margin-bottom: 5px; display: block; text-align: right; font-size: 14px; color: var(--text-main); }
-        
-        input, textarea {
+        input {
             width: 100%;
             padding: 12px;
-            margin: 8px 0;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             box-sizing: border-box;
-            background-color: var(--input-bg);
+            background-color: var(--bg-card);
             color: var(--text-main);
             text-align: center;
             font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(0,123,255,0.2);
         }
 
         .calc-options {
             display: flex;
-            justify-content: space-around;
-            margin: 10px 0 20px 0;
-            background: rgba(0,0,0,0.05);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option-item { 
+            flex: 1;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 13px; 
+            cursor: pointer; 
+            background: var(--bg-body);
             padding: 10px;
             border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
         }
-        .option-item { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
-        .option-item input { width: auto; margin-left: 5px; cursor: pointer; }
+        
+        .option-item:hover { border-color: var(--primary); }
+        .option-item input { width: auto; margin: 0 0 0 8px; cursor: pointer; }
+
+        /* شريط التقدم المطور */
+        #progressContainer {
+            background: #eee;
+            height: 25px; /* زيادة الطول ليظهر النص بداخلها */
+            border-radius: 12px;
+            margin-bottom: 5px;
+            overflow: hidden;
+            display: none;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        #progressBar {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        #remainingText {
+            font-size: 13px;
+            color: var(--warning);
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: none;
+        }
 
         .btn-group {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
         }
 
         button {
-            flex: 1;
+            flex: 2;
             padding: 14px;
-            background-color: #007bff;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
+            transition: 0.3s;
         }
-        button:hover { opacity: 0.9; }
 
-        .reset-btn {
-            background-color: #e67e22; /* لون برتقالي مميز */
-        }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .reset-btn { flex: 1; background-color: var(--warning); }
 
         #resultArea {
-            height: 150px;
+            width: 100%;
+            height: 130px;
             margin-top: 20px;
-            border: 2px dashed #28a745;
+            border: 2px dashed var(--success);
             background: rgba(40, 167, 69, 0.05);
+            border-radius: 10px;
+            padding: 10px;
+            box-sizing: border-box;
             resize: none;
             font-weight: bold;
+            color: var(--text-main);
+            font-family: inherit;
+            text-align: center;
         }
 
-        .copy-btn { background-color: #28a745; margin-top: 15px; width: 100%; }
+        .copy-btn { 
+            background-color: var(--success); 
+            margin-top: 15px; 
+            width: 100%; 
+        }
 
-        .copyright-footer {
-            margin-top: 20px;
+        .footer {
+            margin-top: 25px;
             padding-top: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border);
             font-size: 12px;
             color: #888;
         }
@@ -142,46 +217,93 @@
 <body>
 
 <div class="container">
-    <div class="theme-switch" onclick="toggleTheme()">الوضع الداكن 🌙</div>
+    <div class="theme-switch" id="themeBtn" onclick="toggleTheme()">الوضع الداكن 🌙</div>
     
     <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-img">
 
     <h2>حاسبة المسعفين</h2>
     
-    <span class="label">الكوبي آيدي (Copy ID):</span>
+    <span class="label">رقم معرف المسعف (Copy ID):</span>
     <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
 
     <span class="label">نوع الحسبة:</span>
     <div class="calc-options">
-        <label class="option-item"><input type="radio" name="calcType" value="weekly" checked> حسبة أسبوعية</label>
-        <label class="option-item"><input type="radio" name="calcType" value="30hours"> حسبة 30 ساعة</label>
+        <label class="option-item">
+            <input type="radio" name="calcType" value="weekly" checked onclick="toggleProgress(false)"> حسبة أسبوعية
+        </label>
+        <label class="option-item">
+            <input type="radio" name="calcType" value="30hours" onclick="toggleProgress(true)"> حسبة 30 ساعة
+        </label>
     </div>
 
+    <div id="progressContainer">
+        <div id="progressBar">0%</div>
+    </div>
+    <div id="remainingText"></div>
+
     <span class="label">عدد اللوقات:</span>
-    <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات">
+    <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="liveUpdate()">
 
     <div class="btn-group">
         <button onclick="calculateHours()">حساب وتوليد النص</button>
-        <button class="reset-btn" onclick="resetForm()">حسبة جديدة</button>
+        <button class="reset-btn" onclick="resetForm()">تصفير</button>
     </div>
 
     <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
     
     <button id="copyBtn" class="copy-btn" onclick="copyFinalText()" style="display: none;">نسخ النص بالكامل</button>
 
-    <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-bottom">
-
-    <div class="copyright-footer">
+    <div class="footer">
         الحقوق الفكرية محفوظة باسم <br>
         <strong>علي الحاجي aahaji_110</strong>
     </div>
 </div>
 
 <script>
+    if(localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeBtn').innerText = "الوضع الفاتح ☀️";
+    }
+
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        document.querySelector('.theme-switch').innerText = isDark ? "الوضع الفاتح ☀️" : "الوضع الداكن 🌙";
+        document.getElementById('themeBtn').innerText = isDark ? "الوضع الفاتح ☀️" : "الوضع الداكن 🌙";
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    function toggleProgress(show) {
+        document.getElementById('progressContainer').style.display = show ? 'block' : 'none';
+        document.getElementById('remainingText').style.display = show ? 'block' : 'none';
+        if(!show) {
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('remainingText').innerText = '';
+        } else {
+            liveUpdate();
+        }
+    }
+
+    // تحديث مباشر للنسبة والباقي أثناء الكتابة
+    function liveUpdate() {
+        const logs = document.getElementById('logsCount').value;
+        const calcType = document.querySelector('input[name="calcType"]:checked').value;
+        
+        if (calcType === "30hours" && logs !== "" && logs >= 0) {
+            let hours = Math.round(parseFloat(logs) / 12);
+            let percent = Math.min(Math.round((hours / 30) * 100), 100);
+            let remaining = Math.max(30 - hours, 0);
+
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressBar').innerText = percent + '%';
+            
+            if (remaining > 0) {
+                document.getElementById('remainingText').innerText = `باقي لك ${remaining} ساعة للوصول لـ 30`;
+                document.getElementById('remainingText').style.color = "var(--warning)";
+            } else {
+                document.getElementById('remainingText').innerText = "✅ اكتملت الساعات (30/30)";
+                document.getElementById('remainingText').style.color = "var(--success)";
+            }
+        }
     }
 
     function calculateHours() {
@@ -191,10 +313,12 @@
         const copyBtn = document.getElementById('copyBtn');
         const calcType = document.querySelector('input[name="calcType"]:checked').value;
 
-        if (logs !== "") {
+        if (logs !== "" && logs >= 0) {
             let roundedHours = Math.round(parseFloat(logs) / 12);
             let mention = copyID !== "" ? `<@${copyID}>` : "";
             
+            liveUpdate();
+
             let title = (calcType === "weekly") 
                 ? "ساعاتك هذا الاسبوع حتى تاريخ طلب المناقشة" 
                 : "ساعاتك من اصل 30 ساعه حتى تاريخ طلب المناقشة";
@@ -206,27 +330,40 @@ ${mention}`;
 
             resultArea.value = template;
             copyBtn.style.display = 'block';
+            copyBtn.innerText = "نسخ النص بالكامل";
+            copyBtn.style.backgroundColor = "var(--success)";
         } else {
-            alert("يرجى إدخال عدد اللوقات");
+            alert("يرجى إدخال عدد لوقات صحيح");
         }
     }
 
     function resetForm() {
-        // مسح الحقول
         document.getElementById('copyID').value = "";
         document.getElementById('logsCount').value = "";
         document.getElementById('resultArea').value = "";
-        // إخفاء زر النسخ
         document.getElementById('copyBtn').style.display = 'none';
-        // إعادة اختيار النوع الأول كافتراضي
+        document.getElementById('progressBar').style.width = '0%';
+        document.getElementById('progressBar').innerText = '0%';
+        document.getElementById('remainingText').innerText = '';
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('remainingText').style.display = 'none';
         document.querySelector('input[name="calcType"][value="weekly"]').checked = true;
     }
 
-    function copyFinalText() {
+    async function copyFinalText() {
         const resultArea = document.getElementById('resultArea');
-        resultArea.select();
-        document.execCommand('copy');
-        alert("تم النسخ بنجاح!");
+        const btn = document.getElementById('copyBtn');
+        try {
+            await navigator.clipboard.writeText(resultArea.value);
+            btn.innerText = "✅ تم النسخ بنجاح!";
+            btn.style.backgroundColor = "#155724";
+            setTimeout(() => {
+                btn.innerText = "نسخ النص بالكامل";
+                btn.style.backgroundColor = "var(--success)";
+            }, 2000);
+        } catch (err) {
+            alert("فشل النسخ");
+        }
     }
 </script>
 
