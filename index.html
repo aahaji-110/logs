@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة حساب ساعات المسعفين - </title>
+    <style>
+        :root {
+            --bg-body: #f4f7f6;
+            --bg-container: white;
+            --text-main: #2c3e50;
+            --border-color: #d1d1d1;
+            --input-bg: white;
+        }
+
+        .dark-mode {
+            --bg-body: #1a1a1a;
+            --bg-container: #2d2d2d;
+            --text-main: #ecf0f1;
+            --border-color: #444;
+            --input-bg: #3d3d3d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .container {
+            background: var(--bg-container);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            position: relative;
+        }
+
+        .theme-switch {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            cursor: pointer;
+            background: #eee;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #333;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        .logo-img, .logo-bottom {
+            display: block;
+            margin: 0 auto 15px auto;
+            max-width: 180px;
+            height: auto;
+        }
+        
+        .logo-bottom { max-width: 110px; opacity: 0.7; margin-top: 25px; }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .label { font-weight: bold; margin-bottom: 5px; display: block; text-align: right; font-size: 14px; color: var(--text-main); }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .calc-options {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0 20px 0;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .option-item { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
+        .option-item input { width: auto; margin-left: 5px; cursor: pointer; }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover { opacity: 0.9; }
+
+        .reset-btn {
+            background-color: #e67e22; /* لون برتقالي مميز */
+        }
+
+        #resultArea {
+            height: 150px;
+            margin-top: 20px;
+            border: 2px dashed #28a745;
+            background: rgba(40, 167, 69, 0.05);
+            resize: none;
+            font-weight: bold;
+        }
+
+        .copy-btn { background-color: #28a745; margin-top: 15px; width: 100%; }
+
+        .copyright-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="theme-switch" onclick="toggleTheme()">الوضع الداكن 🌙</div>
+    
+    <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-img">
+
+    <h2>حاسبة المسعفين</h2>
+    
+    <span class="label">الكوبي آيدي (Copy ID):</span>
+    <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
+
+    <span class="label">نوع الحسبة:</span>
+    <div class="calc-options">
+        <label class="option-item"><input type="radio" name="calcType" value="weekly" checked> حسبة أسبوعية</label>
+        <label class="option-item"><input type="radio" name="calcType" value="30hours"> حسبة 30 ساعة</label>
+    </div>
+
+    <span class="label">عدد اللوقات:</span>
+    <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات">
+
+    <div class="btn-group">
+        <button onclick="calculateHours()">حساب وتوليد النص</button>
+        <button class="reset-btn" onclick="resetForm()">حسبة جديدة</button>
+    </div>
+
+    <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
+    
+    <button id="copyBtn" class="copy-btn" onclick="copyFinalText()" style="display: none;">نسخ النص بالكامل</button>
+
+    <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-bottom">
+
+    <div class="copyright-footer">
+        الحقوق الفكرية محفوظة باسم <br>
+        <strong>علي الحاجي aahaji_110</strong>
+    </div>
+</div>
+
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.querySelector('.theme-switch').innerText = isDark ? "الوضع الفاتح ☀️" : "الوضع الداكن 🌙";
+    }
+
+    function calculateHours() {
+        const copyID = document.getElementById('copyID').value.trim();
+        const logs = document.getElementById('logsCount').value;
+        const resultArea = document.getElementById('resultArea');
+        const copyBtn = document.getElementById('copyBtn');
+        const calcType = document.querySelector('input[name="calcType"]:checked').value;
+
+        if (logs !== "") {
+            let roundedHours = Math.round(parseFloat(logs) / 12);
+            let mention = copyID !== "" ? `<@${copyID}>` : "";
+            
+            let title = (calcType === "weekly") 
+                ? "ساعاتك هذا الاسبوع حتى تاريخ طلب المناقشة" 
+                : "ساعاتك من اصل 30 ساعه حتى تاريخ طلب المناقشة";
+
+            const template = `${title}
+ساعاتك الاجمالية (${roundedHours})
+شاكرين لـ اهتمامك
+${mention}`;
+
+            resultArea.value = template;
+            copyBtn.style.display = 'block';
+        } else {
+            alert("يرجى إدخال عدد اللوقات");
+        }
+    }
+
+    function resetForm() {
+        // مسح الحقول
+        document.getElementById('copyID').value = "";
+        document.getElementById('logsCount').value = "";
+        document.getElementById('resultArea').value = "";
+        // إخفاء زر النسخ
+        document.getElementById('copyBtn').style.display = 'none';
+        // إعادة اختيار النوع الأول كافتراضي
+        document.querySelector('input[name="calcType"][value="weekly"]').checked = true;
+    }
+
+    function copyFinalText() {
+        const resultArea = document.getElementById('resultArea');
+        resultArea.select();
+        document.execCommand('copy');
+        alert("تم النسخ بنجاح!");
+    }
+</script>
+
+</body>
+</html>
