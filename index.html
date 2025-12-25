@@ -9,6 +9,7 @@
             --primary: #007bff;
             --success: #28a745;
             --warning: #e67e22;
+            --danger: #dc3545;
             --bg-body: #121212;
             --bg-card: #1e1e1e;
             --text-main: #ecf0f1;
@@ -116,6 +117,16 @@
             box-sizing: border-box; background-color: var(--bg-card); color: var(--text-main); text-align: center; font-size: 1em;
         }
 
+        /* تنسيق خانة البحث */
+        .search-input {
+            border: 2px solid var(--primary);
+            background-color: rgba(0, 123, 255, 0.05);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        select[multiple] { height: 120px; text-align: right; }
+
         .calc-options { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
         .option-item { 
             flex: 1; min-width: 80px; display: flex; align-items: center; justify-content: center;
@@ -125,6 +136,11 @@
         }
         .option-item:hover { border-color: var(--primary); }
         .option-item input { width: auto; margin: 0 0 0 8px; cursor: pointer; }
+
+        .action-btns { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn-small { padding: 8px; font-size: 0.8em; flex: 1; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; color: white; transition: 0.3s; }
+        .btn-undo { background-color: var(--warning); }
+        .btn-reset { background-color: var(--danger); }
 
         #progressWrapper { display: none; margin-bottom: 15px; }
         #progressContainer {
@@ -221,8 +237,8 @@
         <div id="subOptionContainer" class="sub-container">
             <span class="label">نوع الرد المطلوب:</span>
             <div class="calc-options">
-                <label class="option-item"><input type="radio" name="trainingSub" value="a" checked onchange="updateTicketReply()">الرد الأول</label>
-                <label class="option-item"><input type="radio" name="trainingSub" value="b" onchange="updateTicketReply()">الرد الثاني</label>
+                <label class="option-item"><input type="radio" name="trainingSub" value="a" checked onchange="updateTicketReply()"> الخيار الأول</label>
+                <label class="option-item"><input type="radio" name="trainingSub" value="b" onchange="updateTicketReply()"> الخيار الثاني</label>
             </div>
         </div>
         <textarea id="ticketResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
@@ -241,6 +257,7 @@
             <option value="success_fail_main">النجاح والرسوب في الونقات </option>
             <option value="1">رفض الونقات </option>
             <option value="3">مهلة الونقات </option>
+            <option value="summon">استدعاء</option>
         </select>
 
         <div id="successTypeContainer" class="sub-container">
@@ -261,6 +278,151 @@
             </div>
         </div>
 
+        <div id="summonContainer" class="sub-container">
+            <span class="label">ابحث برقم البند أو بكلمة:</span>
+            <input type="text" id="reasonSearch" class="search-input" placeholder="مثال: 0-1 أو معدات..." oninput="filterReasons()">
+            
+            <span class="label">البند / الأسباب (اختيار متعدد):</span>
+            <select id="summonReason" multiple onchange="trackSelection(this); updateVariousReply()">
+                <optgroup label="بنود الدرجة صفر">
+                    <option value="0-1">0-1 توزيع المعدات الصحية</option>
+                    <option value="0-2">0-2 فرض سلطة بحق أو بغير حق</option>
+                    <option value="0-3">0-3 الكذب على المسؤولين</option>
+                    <option value="0-4">0-4 سوء التعامل مع الرتب العليا</option>
+                    <option value="0-5">0-5 حمل معدات غير قانونية</option>
+                    <option value="0-6">0-6 مناقشة أمور الصحة</option>
+                    <option value="0-7">0-7 سوء تعامل مع حالة</option>
+                    <option value="0-8">0-8 استخدام خاطئ للمورفين</option>
+                    <option value="0-9">0-9 فساد مسعف</option>
+                    <option value="0-10">0-10 تسريب جداول</option>
+                    <option value="0-11">0-11 عدم الجدية</option>
+                    <option value="0-12">0-12 عدم المساواة</option>
+                    <option value="0-13">0-13 اعتراض على قرارات</option>
+                    <option value="0-14">0-14 سوء التعامل العام</option>
+                    <option value="0-15">0-15 عدم الالتزام بالأوامر</option>
+                    <option value="0-16">0-16 التستر على مجرم</option>
+                    <option value="0-17">0-17 صرف معدات بلا داعي</option>
+                    <option value="0-18">0-18 تلاعب معلومات HR</option>
+                    <option value="0-19">0-19 إعطاء كول أوت خاطئ</option>
+                    <option value="0-20">0-20 إرسال للمصحة بغير سبب</option>
+                    <option value="0-21">0-21 تذكير مسقط بمجريات سابقة</option>
+                    <option value="0-22">0-22 الإساءة للوزارة</option>
+                    <option value="0-23">0-23 استغلال صلاحيات الكوماند</option>
+                </optgroup>
+                <optgroup label="بنود الدرجة الأولى">
+                    <option value="1-1">1-1 عدم تحديث حالة</option>
+                    <option value="1-2">1-2 مباشرة دون أكواد</option>
+                    <option value="1-3">1-3 عدم تعيين نائب</option>
+                    <option value="1-4">1-4 استخدام كود 2/3</option>
+                    <option value="1-5">1-5 أخطاء راديو</option>
+                    <option value="1-6">1-6 تهرب من العمليات</option>
+                    <option value="1-7">1-7 عدم الرد 997</option>
+                    <option value="1-8">1-8 خروج دون إذن</option>
+                    <option value="1-9">1-9 ورشة/مطعم دون إذن</option>
+                    <option value="1-10">1-10 ملابس غير لائقة</option>
+                    <option value="1-11">1-11 وشوم مشوهة</option>
+                    <option value="1-12">1-12 معالجة بدون سرير</option>
+                    <option value="1-13">1-13 تأفيك بمكان غير مخصص</option>
+                    <option value="1-14">1-14 قصور تقارير</option>
+                    <option value="1-15">1-15 تجمع عشوائي</option>
+                </optgroup>
+                <optgroup label="بنود الدرجة الثانية">
+                    <option value="2-1">2-1 معالجة بوجود القطاع</option>
+                    <option value="2-2">2-2 موجة عسكر دون إذن</option>
+                    <option value="2-3">2-3 معالجة بمكان عام</option>
+                    <option value="2-4">2-4 مقاطعة الراديو</option>
+                    <option value="2-5">2-5 عدم تسجيل خروج غفوة</option>
+                    <option value="2-6">2-6 إهمال معدات</option>
+                    <option value="2-7">2-7 إهمال ملابس</option>
+                    <option value="2-8">2-8 طلب توجيه شخصي</option>
+                    <option value="2-9">2-9 ركض بالمستشفى</option>
+                    <option value="2-10">2-10 غياب عن الراديو</option>
+                    <option value="2-11">2-11 إيرشب بدون وينق</option>
+                    <option value="2-12">2-12 إهمال مركبات</option>
+                    <option value="2-13">2-13 توصيل أشخاص</option>
+                    <option value="2-14">2-14 عمل طبي بلا موافقة</option>
+                    <option value="2-15">2-15 غفوة بلا إذن</option>
+                    <option value="2-16">2-16 إهمال كول ساين</option>
+                    <option value="2-17">2-17 منشن غير مصرح</option>
+                    <option value="2-18">2-18 ألوان مركبات خاطئة</option>
+                    <option value="2-19">2-19 مخالفة راديو</option>
+                    <option value="2-20">2-20 الاستمرار كمواطن عند الحاجة</option>
+                </optgroup>
+                <optgroup label="بنود الدرجة الثالثة">
+                    <option value="3-1">3-1 إهمال رهائن</option>
+                    <option value="3-2">3-2 وقوف خاطئ</option>
+                    <option value="3-3">3-3 إهمال مركبات</option>
+                    <option value="3-4">3-4 تدخل بحالة أخرى</option>
+                    <option value="3-5">3-5 إهمال ديسباتش</option>
+                    <option value="3-6">3-6 مناقشة ديسباتش</option>
+                    <option value="3-7">3-7 ترك غرف مفتوحة</option>
+                    <option value="3-8">3-8 إهمال مشرحة</option>
+                    <option value="3-9">3-9 كلبشة خاطئة</option>
+                    <option value="3-10">3-10 بلا تقارير جنائية</option>
+                    <option value="3-11">3-11 دخول بشخصية أخرى</option>
+                    <option value="3-12">3-12 نقل بلا عسكر</option>
+                    <option value="3-13">3-13 غياب اجتماع</option>
+                    <option value="3-14">3-14 إهمال مريض</option>
+                    <option value="3-15">3-15 توجه بلا علم</option>
+                    <option value="3-16">3-16 إهمال بيانات</option>
+                    <option value="3-17">3-17 إهمال بلاغات</option>
+                    <option value="3-18">3-18 مخالفة تعميم</option>
+                    <option value="3-19">3-19 باندج زائد</option>
+                    <option value="3-20">3-20 عملية بلا اختصاص</option>
+                    <option value="3-21">3-21 إهمال أوبجيكتات</option>
+                    <option value="3-22">3-22 إهمال ميدان</option>
+                    <option value="3-23">3-23 تبديل باليك</option>
+                    <option value="3-24">3-24 مخالفة زون</option>
+                    <option value="3-25">3-25 إهمال وينقات</option>
+                    <option value="3-26">3-26 إهمال استجداد</option>
+                </optgroup>
+                <optgroup label="بنود الدرجة الرابعة">
+                    <option value="4-1">4-1 هيلي بلا وينق</option>
+                    <option value="4-2">4-2 عمل غير احترافي</option>
+                    <option value="4-3">4-3 تقصير رقابة</option>
+                    <option value="4-4">4-4 تستر على مستهتر</option>
+                    <option value="4-5">4-5 معالجة مسقط كامل</option>
+                    <option value="4-6">4-6 مساعدة عسكر بالقبض</option>
+                    <option value="4-7">4-7 معالجة لغير القطاع</option>
+                    <option value="4-8">4-8 تدخل قطاع آخر</option>
+                    <option value="4-9">4-9 نقل بلا وينق</option>
+                    <option value="4-10">4-10 غياب استدعاء</option>
+                    <option value="4-11">4-11 ميدان بمرافقين</option>
+                    <option value="4-12">4-12 مخالفة أوامر العمليات</option>
+                    <option value="4-13">4-13 مناقشة شؤون بالداخل</option>
+                    <option value="4-14">4-14 عيادات غير مصرحة</option>
+                    <option value="4-15">4-15 تلميح ترقية</option>
+                    <option value="4-16">4-16 كود كوماند بلا وينق</option>
+                    <option value="4-17">4-17 تخطي مراجع</option>
+                    <option value="4-18">4-18 ضرب/تصادم</option>
+                    <option value="4-19">4-19 إهمال ضبط ميدان</option>
+                    <option value="4-20">4-20 وحدات زائدة لرهينة</option>
+                    <option value="4-21">4-21 إنعاش خارج طوارئ</option>
+                </optgroup>
+            </select>
+            
+            <div class="action-btns">
+                <button class="btn-small btn-undo" onclick="undoSelection()">↩️ تراجع</button>
+                <button class="btn-small btn-reset" onclick="resetSelection()">🗑️ مسح الكل</button>
+            </div>
+
+            <span class="label">الجهة المستدعاة (Summon From):</span>
+            <select id="summonFrom" onchange="updateVariousReply()">
+                <option value="@EMS Academy Commander">@EMS Academy Commander</option>
+                <option value="@EMS Academy Deputy">@EMS Academy Deputy</option>
+                <option value="@Supervisor of EMS Academy">@Supervisor of EMS Academy</option>
+                <option value="@EMS Acadmy Management 👨‍⚕️">@EMS Acadmy Management 👨‍⚕️</option>
+                <option value="@EMS FTO 👨‍⚕️">@EMS FTO 👨‍⚕️</option>
+                <option value="@EMS Chief 👨‍⚕️">@EMS Chief 👨‍⚕️</option>
+            </select>
+
+            <span class="label">الوقت (Time):</span>
+            <select id="summonTime" onchange="updateVariousReply()">
+                <option value="NOW">NOW</option>
+                <option value="تواصل معي لتحديد وقت عبر الخاص">تواصل معي لتحديد وقت عبر الخاص</option>
+            </select>
+        </div>
+
         <textarea id="variousResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
         <button id="copyBtn3" class="copy-btn" onclick="copyFinalText('variousResult', 'copyBtn3')">نسخ الرد</button>
     </div>
@@ -273,25 +435,82 @@
 
 <script>
     let currentFS = 16;
+    let selectedOrder = [];
+
     function changeFontSize(delta) {
         currentFS += delta; currentFS = Math.max(12, Math.min(26, currentFS));
         document.documentElement.style.setProperty('--base-font-size', currentFS + 'px');
     }
 
     function openTab(evt, tabName) {
-        let i, content, links;
-        content = document.getElementsByClassName("tab-content");
-        for (i = 0; i < content.length; i++) content[i].classList.remove("active");
-        links = document.getElementsByClassName("tab-link");
-        for (i = 0; i < links.length; i++) links[i].classList.remove("active");
+        let content = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < content.length; i++) content[i].classList.remove("active");
+        let links = document.getElementsByClassName("tab-link");
+        for (let i = 0; i < links.length; i++) links[i].classList.remove("active");
         document.getElementById(tabName).classList.add("active");
         evt.currentTarget.classList.add("active");
     }
 
     function toggleTheme() {
         document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('themeBtn').innerText = isLight ? "🌙" : "☀️";
+        document.getElementById('themeBtn').innerText = document.body.classList.contains('light-mode') ? "🌙" : "☀️";
+    }
+
+    // دالة البحث والفلترة
+    function filterReasons() {
+        let input = document.getElementById('reasonSearch').value.toLowerCase();
+        let select = document.getElementById('summonReason');
+        let options = select.getElementsByTagName('option');
+        let groups = select.getElementsByTagName('optgroup');
+
+        // فلترة الخيارات
+        for (let i = 0; i < options.length; i++) {
+            let txt = options[i].text.toLowerCase();
+            let val = options[i].value.toLowerCase();
+            if (txt.includes(input) || val.includes(input)) {
+                options[i].style.display = "";
+            } else {
+                options[i].style.display = "none";
+            }
+        }
+        
+        // إخفاء العناوين (optgroup) إذا كانت كل خياراتها مخفية
+        for (let g = 0; g < groups.length; g++) {
+            let visible = false;
+            let opts = groups[g].getElementsByTagName('option');
+            for (let o = 0; o < opts.length; o++) {
+                if (opts[o].style.display !== "none") { visible = true; break; }
+            }
+            groups[g].style.display = visible ? "" : "none";
+        }
+    }
+
+    function trackSelection(select) {
+        let currentValues = Array.from(select.selectedOptions).map(opt => opt.value);
+        currentValues.forEach(val => {
+            if (!selectedOrder.includes(val)) selectedOrder.push(val);
+        });
+        selectedOrder = selectedOrder.filter(val => currentValues.includes(val));
+    }
+
+    function undoSelection() {
+        if (selectedOrder.length > 0) {
+            let lastVal = selectedOrder.pop();
+            let select = document.getElementById('summonReason');
+            for (let opt of select.options) {
+                if (opt.value === lastVal) opt.selected = false;
+            }
+            updateVariousReply();
+        }
+    }
+
+    function resetSelection() {
+        selectedOrder = [];
+        document.getElementById('reasonSearch').value = "";
+        filterReasons();
+        let select = document.getElementById('summonReason');
+        for (let opt of select.options) opt.selected = false;
+        updateVariousReply();
     }
 
     function handleCalcTypeChange(show) {
@@ -320,7 +539,7 @@
         const type = document.querySelector('input[name="calcType"]:checked').value;
         if (logs === "" || logs < 0) { alert("يرجى إدخال عدد لوقات صحيح"); return; }
         let h = Math.round(parseFloat(logs) / 12);
-        let mention = id ? `<@${id}>` : "( @ )";
+        let mention = `<@${id}>`;
         let title = (type === "weekly") ? "ساعاتك هذا الاسبوع حتى تاريخ طلب المناقشة" : "ساعاتك من اصل 30 ساعه حتى تاريخ طلب المناقشة";
         document.getElementById('resultArea').value = `${title}\nساعاتك الاجمالية (${h})\nشاكرين لـ اهتمامك\n${mention}`;
         document.getElementById('copyBtn1').style.display = 'block';
@@ -352,32 +571,32 @@
 
     function updateVariousReply() {
         const mid = document.getElementById('medicID').value;
-        const mention = mid ? `<@${mid}>` : "( @ )";
+        const mention = `<@${mid}>`;
         const v = document.getElementById('variousSelect').value;
-        const subRanksContainer = document.getElementById('variousSubContainer');
-        const successTypeContainer = document.getElementById('successTypeContainer');
+        const summonContainer = document.getElementById('summonContainer');
         let m = "";
 
-        // التحكم في ظهور الحاويات
-        successTypeContainer.style.display = (v === "success_fail_main") ? 'block' : 'none';
-        subRanksContainer.style.display = (v === "1" || v === "success_fail_main") ? 'block' : 'none';
+        document.getElementById('successTypeContainer').style.display = (v === "success_fail_main") ? 'block' : 'none';
+        document.getElementById('variousSubContainer').style.display = (v === "1" || v === "success_fail_main") ? 'block' : 'none';
+        summonContainer.style.display = (v === "summon") ? 'block' : 'none';
 
-        const checkedCheckboxes = document.querySelectorAll('input[name="rankSub"]:checked');
-        const selectedRanks = Array.from(checkedCheckboxes).map(cb => cb.value).join(' - ');
-
-        if(v=="1") {
-            m = `EMS Academy\n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجاوب و ارسال المطلوب منك\nتم رفض الونقات وبامكانك التقديم مره اخرى **\n\n${selectedRanks}\n\n${mention}`;
-        } else if(v=="3") {
-            m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجواب و ارسال المطلوب منك\nسيتم اعطائك مهلة لمدة اسبوع لتسليم المطلوب منك **\n\n**وفي حال عدم تسليم المطلوب منك سيتم رفض الونق و احتساب لك رسوب **\n\n${mention}`;
-        } else if(v=="success_fail_main") {
-            const successType = document.querySelector('input[name="successType"]:checked').value;
-            if (successType === "only") {
-                m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه **\n\n${selectedRanks}\n\n${mention}`;
-            } else {
-                m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه وبقية الوينقات يحتسب لك رسوب فيها وبامكانك التقديم مره اخرى الاسبوع القادم **\n\n${selectedRanks}\n\n${mention}`;
+        if(v === "summon") {
+            const reasonString = selectedOrder.length > 0 ? selectedOrder.join(' - ') : "لم يحدد";
+            const time = document.getElementById('summonTime').value;
+            const from = document.getElementById('summonFrom').value;
+            
+            m = `Name : [ ${mention} ]\nSummon From : [ ${from} ]\nTime : [ ${time} ]\nReason : [ ${reasonString} ]\nفي حال ما ناسبك الوقت تواصل معي في الخاص لتغييره في الـ 24 ساعة المقبلة`;
+        } else {
+            const checkedCheckboxes = document.querySelectorAll('input[name="rankSub"]:checked');
+            const selectedRanks = Array.from(checkedCheckboxes).map(cb => cb.value).join(' - ');
+            if(v=="1") m = `EMS Academy\n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجاوب و ارسال المطلوب منك\nتم رفض الونقات وبامكانك التقديم مره اخرى **\n\n${selectedRanks}\n\n${mention}`;
+            else if(v=="3") m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجواب و ارسال المطلوب منك\nسيتم اعطائك مهلة لمدة اسبوع لتسليم المطلوب منك **\n\n**وفي حال عدم تسليم المطلوب منك سيتم رفض الونق و احتساب لك رسوب **\n\n${mention}`;
+            else if(v=="success_fail_main") {
+                const successType = document.querySelector('input[name="successType"]:checked').value;
+                if (successType === "only") m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه **\n\n${selectedRanks}\n\n${mention}`;
+                else m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه وبقية الوينقات يحتسب لك رسوب فيها وبامكانك التقديم مره اخرى الاسبوع القادم **\n\n${selectedRanks}\n\n${mention}`;
             }
         }
-
         document.getElementById('variousResult').value = m;
     }
 
