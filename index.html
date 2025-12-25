@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة حساب ساعات المسعفين - نظام الإنجاز</title>
+    <title>نظام أكاديمية الصحة المتكامل</title>
     <style>
         :root {
             --primary: #007bff;
             --success: #28a745;
             --warning: #e67e22;
-            --bg-body: #f4f7f6;
-            --bg-card: #ffffff;
-            --text-main: #2c3e50;
-            --border: #d1d1d1;
-            --shadow: 0 8px 30px rgba(0,0,0,0.1);
-        }
-
-        .dark-mode {
             --bg-body: #121212;
             --bg-card: #1e1e1e;
             --text-main: #ecf0f1;
             --border: #333;
             --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --base-font-size: 16px;
+        }
+
+        .light-mode {
+            --bg-body: #f4f7f6;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --border: #d1d1d1;
+            --shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
 
         body {
@@ -35,6 +36,7 @@
             margin: 0;
             padding: 20px;
             transition: all 0.3s ease;
+            font-size: var(--base-font-size);
         }
 
         .container {
@@ -43,329 +45,353 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             text-align: center;
             position: relative;
         }
 
-        .theme-switch {
+        .controls-top {
             position: absolute;
             top: 15px;
             left: 15px;
+            display: flex;
+            gap: 5px;
+            z-index: 100;
+        }
+
+        .btn-control {
             cursor: pointer;
             background: var(--bg-body);
-            padding: 6px 10px;
+            padding: 6px 12px;
             border-radius: 50px;
             font-size: 12px;
             border: 1px solid var(--border);
             user-select: none;
             transition: 0.3s;
-            z-index: 10;
+            color: var(--text-main);
+            font-weight: bold;
         }
+        .btn-control:hover { background: var(--primary); color: white; }
 
         .logo-img {
             max-width: 140px;
-            margin-top: -10px; 
             margin-bottom: 10px;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
-        h2 { 
-            margin: 0 auto 25px auto;
-            font-size: 24px; 
-            border-bottom: 3px solid var(--primary);
-            display: table;
-            padding-bottom: 5px;
-            font-weight: 800;
-        }
-        
-        .label { 
-            font-weight: bold; 
-            margin-bottom: 8px; 
-            display: block; 
-            text-align: right; 
-            font-size: 14px; 
-        }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            box-sizing: border-box;
-            background-color: var(--bg-card);
-            color: var(--text-main);
-            text-align: center;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(0,123,255,0.2);
-        }
-
-        .calc-options {
+        .tabs-header {
             display: flex;
-            gap: 10px;
+            justify-content: space-around;
             margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
         }
-        
-        .option-item { 
-            flex: 1;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 13px; 
-            cursor: pointer; 
-            background: var(--bg-body);
+
+        .tab-link {
             padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: var(--text-main);
+            opacity: 0.6;
             transition: 0.3s;
+            border-bottom: 3px solid transparent;
         }
+
+        .tab-link.active {
+            opacity: 1;
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { margin: 0 auto 20px auto; font-size: 1.4em; border-bottom: 3px solid var(--primary); display: table; padding-bottom: 5px; font-weight: 800; }
+        .label { font-weight: bold; margin-bottom: 8px; display: block; text-align: right; font-size: 0.85em; }
         
+        input, select, textarea {
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 10px;
+            box-sizing: border-box; background-color: var(--bg-card); color: var(--text-main); text-align: center; font-size: 1em;
+        }
+
+        .calc-options { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
+        .option-item { 
+            flex: 1; min-width: 80px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.75em; cursor: pointer; background: var(--bg-body);
+            padding: 10px 5px; border-radius: 8px; border: 1px solid var(--border);
+            transition: 0.2s;
+        }
         .option-item:hover { border-color: var(--primary); }
         .option-item input { width: auto; margin: 0 0 0 8px; cursor: pointer; }
 
+        #progressWrapper { display: none; margin-bottom: 15px; }
         #progressContainer {
-            background: #eee;
-            height: 25px; 
-            border-radius: 12px;
-            margin-bottom: 5px;
-            overflow: hidden;
-            display: none;
+            background: #333; height: 25px; border-radius: 12px;
+            overflow: hidden; border: 1px solid var(--border);
             position: relative;
-            border: 1px solid var(--border);
         }
         #progressBar {
-            height: 100%;
-            background: linear-gradient(90deg, #28a745, #20c997);
-            width: 0%;
-            transition: width 0.8s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
+            height: 100%; background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%; transition: width 0.5s ease; display: flex; align-items: center;
+            justify-content: center; color: white; font-weight: bold; font-size: 12px;
         }
-        #remainingText {
-            font-size: 13px;
-            color: var(--warning);
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: none;
-        }
+        #remainingText { font-size: 0.9em; color: var(--warning); font-weight: bold; margin-top: 8px; display: block; }
 
-        .btn-group {
-            display: flex;
-            gap: 10px;
+        .sub-container {
+            background: rgba(0, 123, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary);
+            display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         button {
-            flex: 2;
-            padding: 14px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: 0.3s;
+            width: 100%; padding: 14px; background-color: var(--primary);
+            color: white; border: none; border-radius: 10px;
+            cursor: pointer; font-size: 1em; font-weight: bold; transition: 0.3s;
         }
-
         button:hover { opacity: 0.9; transform: translateY(-2px); }
+        .copy-btn { background-color: var(--success); margin-top: 15px; }
 
-        .reset-btn { flex: 1; background-color: var(--warning); }
-
-        #resultArea {
-            width: 100%;
-            height: 130px;
-            margin-top: 20px;
-            border: 2px dashed var(--success);
-            background: rgba(40, 167, 69, 0.05);
-            border-radius: 10px;
-            padding: 10px;
-            box-sizing: border-box;
-            resize: none;
-            font-weight: bold;
-            color: var(--text-main);
-            font-family: inherit;
-            text-align: center;
+        textarea {
+            height: 200px; margin-top: 20px; border: 2px dashed var(--success);
+            background: rgba(40, 167, 69, 0.05); border-radius: 10px; padding: 10px;
+            resize: none; font-weight: bold; color: var(--text-main); text-align: center;
         }
 
-        .copy-btn { 
-            background-color: var(--success); 
-            margin-top: 15px; 
-            width: 100%; 
-        }
-
-        .footer {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border);
-            font-size: 12px;
-            color: #888;
-        }
+        .footer { margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 0.75em; color: #888; }
+        .footer strong { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="theme-switch" id="themeBtn" onclick="toggleTheme()">الوضع الداكن 🌙</div>
-    
+    <div class="controls-top">
+        <div class="btn-control" onclick="changeFontSize(2)">A+</div>
+        <div class="btn-control" onclick="changeFontSize(-2)">A-</div>
+        <div class="btn-control" id="themeBtn" onclick="toggleTheme()">☀️</div>
+    </div>
+
     <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-img">
-
-    <h2>حاسبة ساعات المسعفين</h2>
     
-    <span class="label">رقم دسكورد المسعف:</span>
-    <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
-
-    <span class="label">نوع الحسبة:</span>
-    <div class="calc-options">
-        <label class="option-item">
-            <input type="radio" name="calcType" value="weekly" checked onclick="toggleProgress(false)"> حسبة أسبوعية
-        </label>
-        <label class="option-item">
-            <input type="radio" name="calcType" value="30hours" onclick="toggleProgress(true)"> حسبة 30 ساعة
-        </label>
+    <div class="tabs-header">
+        <div class="tab-link active" onclick="openTab(event, 'calcTab')">logs Calculator</div>
+        <div class="tab-link" onclick="openTab(event, 'ticketTab')">Ticket Replies</div>
+        <div class="tab-link" onclick="openTab(event, 'variousTab')">Various Replies</div>
     </div>
 
-    <div id="progressContainer">
-        <div id="progressBar">0%</div>
+    <div id="calcTab" class="tab-content active">
+        <h2>حاسبة ساعات المسعفين</h2>
+        <span class="label">رقم دسكورد المسعف:</span>
+        <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
+        <span class="label">نوع الحسبة:</span>
+        <div class="calc-options">
+            <label class="option-item"><input type="radio" name="calcType" value="weekly" checked onclick="handleCalcTypeChange(false)"> حسبة أسبوعية</label>
+            <label class="option-item"><input type="radio" name="calcType" value="30hours" onclick="handleCalcTypeChange(true)"> حسبة 30 ساعة</label>
+        </div>
+        <div id="progressWrapper">
+            <div id="progressContainer"><div id="progressBar">0%</div></div>
+            <div id="remainingText"></div>
+        </div>
+        <span class="label">عدد اللوقات:</span>
+        <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="liveUpdate30()">
+        <button onclick="calculateHoursFinal()">حساب</button>
+        <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
+        <button id="copyBtn1" class="copy-btn" onclick="copyFinalText('resultArea', 'copyBtn1')" style="display: none;">نسخ</button>
     </div>
-    <div id="remainingText"></div>
 
-    <span class="label">عدد اللوقات:</span>
-    <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="liveUpdate()">
-
-    <div class="btn-group">
-        <button onclick="calculateHours()">حساب</button>
-        <button class="reset-btn" onclick="resetForm()">تصفير</button>
+    <div id="ticketTab" class="tab-content">
+        <h2>ردود التكت</h2>
+        <span class="label">الاسم (الموظف):</span>
+        <input type="text" id="staffName1" placeholder="أدخل اسمك" oninput="updateTicketReply()">
+        <span class="label">اختر خياراً:</span>
+        <select id="ticketSelect" onchange="updateTicketReply()">
+            <option value="">-- اختر من القائمة --</option>
+            <option value="6">قبول التيكت </option>
+            <option value="1">الخروج من التدريب لظرف</option>
+            <option value="2">تغيير اسم الكركتر</option>
+            <option value="3">ما أقدر أحضر الاختبار</option>
+            <option value="4">الاكتفاء بالاختبار</option>
+            <option value="5">موعد التدريب والاختبار</option>
+        </select>
+        <div id="subOptionContainer" class="sub-container">
+            <span class="label">نوع الرد المطلوب:</span>
+            <div class="calc-options">
+                <label class="option-item"><input type="radio" name="trainingSub" value="a" checked onchange="updateTicketReply()">الرد الأول</label>
+                <label class="option-item"><input type="radio" name="trainingSub" value="b" onchange="updateTicketReply()">الرد الثاني</label>
+            </div>
+        </div>
+        <textarea id="ticketResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
+        <button id="copyBtn2" class="copy-btn" onclick="copyFinalText('ticketResult', 'copyBtn2')">نسخ الرد</button>
     </div>
 
-    <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
-    
-    <button id="copyBtn" class="copy-btn" onclick="copyFinalText()" style="display: none;">نسخ</button>
+    <div id="variousTab" class="tab-content">
+        <h2>ردود متنوعة</h2>
+        <span class="label">الاسم (الموظف):</span>
+        <input type="text" id="staffName2" placeholder="أدخل اسمك" oninput="updateVariousReply()">
+        <span class="label">رقم دسكورد المسعف:</span>
+        <input type="number" id="medicID" placeholder="رقم الدسكورد" oninput="updateVariousReply()">
+        <span class="label">اختر الحالة:</span>
+        <select id="variousSelect" onchange="updateVariousReply()">
+            <option value="">-- اختر من القائمة --</option>
+            <option value="success_fail_main">النجاح والرسوب في الونقات </option>
+            <option value="1">رفض الونقات </option>
+            <option value="3">مهلة الونقات </option>
+        </select>
+
+        <div id="successTypeContainer" class="sub-container">
+            <span class="label">نوع النتيجة:</span>
+            <div class="calc-options">
+                <label class="option-item"><input type="radio" name="successType" value="only" checked onchange="updateVariousReply()"> نجاح كامل</label>
+                <label class="option-item"><input type="radio" name="successType" value="mixed" onchange="updateVariousReply()"> نجاح ورسوب</label>
+            </div>
+        </div>
+
+        <div id="variousSubContainer" class="sub-container">
+            <span class="label">اختر الونقات (الفصل بـ - تلقائياً):</span>
+            <div class="calc-options">
+                <label class="option-item"><input type="checkbox" name="rankSub" value="(HC)" onchange="updateVariousReply()"> (HC)</label>
+                <label class="option-item"><input type="checkbox" name="rankSub" value="(DC)" onchange="updateVariousReply()"> (DC)</label>
+                <label class="option-item"><input type="checkbox" name="rankSub" value="(OAC)" onchange="updateVariousReply()"> (OAC)</label>
+                <label class="option-item"><input type="checkbox" name="rankSub" value="(IAC)" onchange="updateVariousReply()"> (IAC)</label>
+            </div>
+        </div>
+
+        <textarea id="variousResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
+        <button id="copyBtn3" class="copy-btn" onclick="copyFinalText('variousResult', 'copyBtn3')">نسخ الرد</button>
+    </div>
 
     <div class="footer">
-        الحقوق الفكرية محفوظة باسم <br>
-        <strong>علي الحاجي aahaji_110</strong>
+        الحقوق محفوظة لـ: <strong>علي الحاجي</strong> <br>
+        Discord : <strong>ali_go</strong>
     </div>
 </div>
 
 <script>
-    if(localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('themeBtn').innerText = "الوضع الداكن ☀️";
+    let currentFS = 16;
+    function changeFontSize(delta) {
+        currentFS += delta; currentFS = Math.max(12, Math.min(26, currentFS));
+        document.documentElement.style.setProperty('--base-font-size', currentFS + 'px');
+    }
+
+    function openTab(evt, tabName) {
+        let i, content, links;
+        content = document.getElementsByClassName("tab-content");
+        for (i = 0; i < content.length; i++) content[i].classList.remove("active");
+        links = document.getElementsByClassName("tab-link");
+        for (i = 0; i < links.length; i++) links[i].classList.remove("active");
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
     }
 
     function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        document.getElementById('themeBtn').innerText = isDark ? "الوضع الداكن ☀️" : "الوضع الفاتح 🌙";
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('themeBtn').innerText = isLight ? "🌙" : "☀️";
     }
 
-    function toggleProgress(show) {
-        document.getElementById('progressContainer').style.display = show ? 'block' : 'none';
-        document.getElementById('remainingText').style.display = show ? 'block' : 'none';
-        if(!show) {
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('remainingText').innerText = '';
-        } else {
-            liveUpdate();
-        }
+    function handleCalcTypeChange(show) {
+        document.getElementById('progressWrapper').style.display = show ? 'block' : 'none';
+        liveUpdate30();
     }
 
-    function liveUpdate() {
+    function liveUpdate30() {
         const logs = document.getElementById('logsCount').value;
-        const calcType = document.querySelector('input[name="calcType"]:checked').value;
-        
-        if (calcType === "30hours" && logs !== "" && logs >= 0) {
+        const type = document.querySelector('input[name="calcType"]:checked').value;
+        const bar = document.getElementById('progressBar');
+        const rem = document.getElementById('remainingText');
+        if (type === "30hours" && logs !== "" && logs >= 0) {
             let hours = Math.round(parseFloat(logs) / 12);
             let percent = Math.min(Math.round((hours / 30) * 100), 100);
-            let remaining = Math.max(30 - hours, 0);
+            let left = Math.max(30 - hours, 0);
+            bar.style.width = percent + '%';
+            bar.innerText = hours + " ساعة (" + percent + "%)";
+            rem.innerText = left > 0 ? `باقي لك ${left} ساعة للوصول لـ 30` : "✅ تم إكمال الـ 30 ساعة بنجاح!";
+        }
+    }
 
-            document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressBar').innerText = percent + '%';
-            
-            if (remaining > 0) {
-                document.getElementById('remainingText').innerText = `باقي لك ${remaining} ساعة للوصول لـ 30`;
-                document.getElementById('remainingText').style.color = "var(--warning)";
+    function calculateHoursFinal() {
+        const id = document.getElementById('copyID').value.trim();
+        const logs = document.getElementById('logsCount').value;
+        const type = document.querySelector('input[name="calcType"]:checked').value;
+        if (logs === "" || logs < 0) { alert("يرجى إدخال عدد لوقات صحيح"); return; }
+        let h = Math.round(parseFloat(logs) / 12);
+        let mention = id ? `<@${id}>` : "( @ )";
+        let title = (type === "weekly") ? "ساعاتك هذا الاسبوع حتى تاريخ طلب المناقشة" : "ساعاتك من اصل 30 ساعه حتى تاريخ طلب المناقشة";
+        document.getElementById('resultArea').value = `${title}\nساعاتك الاجمالية (${h})\nشاكرين لـ اهتمامك\n${mention}`;
+        document.getElementById('copyBtn1').style.display = 'block';
+    }
+
+    function updateTicketReply() {
+        const name = document.getElementById('staffName1').value || "(اسمك)";
+        const mainVal = document.getElementById('ticketSelect').value;
+        const subContainer = document.getElementById('subOptionContainer');
+        const header = `EMS FTO | أكاديمية الصحة\n**حياك الله , معك ${name} من أكاديمية الصحة\n\n`;
+        let message = "";
+        
+        if (mainVal === "6") {
+            subContainer.style.display = 'none';
+            message = `**\`- EMS FTO | أكاديمية وزارة الصحة - \`**\n**حياك الله , معك ${name} من أكاديمية وزارة الصحة***`;
+        } else if (mainVal === "1") {
+            subContainer.style.display = 'block';
+            const subVal = document.querySelector('input[name="trainingSub"]:checked').value;
+            message = subVal === "a" ? header + "بأمكانك الخروج لكن لن يتم اعادة لك التدريب\nويجب عليك حضور الاختبار على كامل مسؤوليتك *" : header + "حضور التدريب كامل اجباري وعدم حضورك له يعني استبعادك ويجب عليك فتح تكت في موعد الاختبار لطلب فرصه لحضور الاختبار وسيتم مراجعة موضوعك من قبل المسؤولين *";
+        } else {
+            subContainer.style.display = 'none';
+            if(mainVal=="2") message=header+"يرجى منك ارفاق :\n- الأسم القديم\n- الأسم الجديد\nوسيتم مراجعة موضوعك **";
+            if(mainVal=="3") message=header+"حضور الاختبار اجباري و عدم حضورك لة يتم استبعادك مباشرة **";
+            if(mainVal=="4") message=header+"حضور التدريب اجباري و عدم حضورك يتم استبعادك مباشرة لكن بأمكانك طلب فرصة حضور الاختبار في موعد الاختبار و سيتم مراجعة موضوعك من قبل المسؤولين **";
+            if(mainVal=="5") message=header+"في حال تم تحديد موعد التدريب و الاختبار سيتم الاعلان عنة في القنوات المخصصة **";
+        }
+        document.getElementById('ticketResult').value = message;
+    }
+
+    function updateVariousReply() {
+        const mid = document.getElementById('medicID').value;
+        const mention = mid ? `<@${mid}>` : "( @ )";
+        const v = document.getElementById('variousSelect').value;
+        const subRanksContainer = document.getElementById('variousSubContainer');
+        const successTypeContainer = document.getElementById('successTypeContainer');
+        let m = "";
+
+        // التحكم في ظهور الحاويات
+        successTypeContainer.style.display = (v === "success_fail_main") ? 'block' : 'none';
+        subRanksContainer.style.display = (v === "1" || v === "success_fail_main") ? 'block' : 'none';
+
+        const checkedCheckboxes = document.querySelectorAll('input[name="rankSub"]:checked');
+        const selectedRanks = Array.from(checkedCheckboxes).map(cb => cb.value).join(' - ');
+
+        if(v=="1") {
+            m = `EMS Academy\n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجاوب و ارسال المطلوب منك\nتم رفض الونقات وبامكانك التقديم مره اخرى **\n\n${selectedRanks}\n\n${mention}`;
+        } else if(v=="3") {
+            m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجواب و ارسال المطلوب منك\nسيتم اعطائك مهلة لمدة اسبوع لتسليم المطلوب منك **\n\n**وفي حال عدم تسليم المطلوب منك سيتم رفض الونق و احتساب لك رسوب **\n\n${mention}`;
+        } else if(v=="success_fail_main") {
+            const successType = document.querySelector('input[name="successType"]:checked').value;
+            if (successType === "only") {
+                m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه **\n\n${selectedRanks}\n\n${mention}`;
             } else {
-                document.getElementById('remainingText').innerText = "✅ اكتملت الساعات (30/30)";
-                document.getElementById('remainingText').style.color = "var(--success)";
+                m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه وبقية الوينقات يحتسب لك رسوب فيها وبامكانك التقديم مره اخرى الاسبوع القادم **\n\n${selectedRanks}\n\n${mention}`;
             }
         }
+
+        document.getElementById('variousResult').value = m;
     }
 
-    function calculateHours() {
-        const copyID = document.getElementById('copyID').value.trim();
-        const logs = document.getElementById('logsCount').value;
-        const resultArea = document.getElementById('resultArea');
-        const copyBtn = document.getElementById('copyBtn');
-        const calcType = document.querySelector('input[name="calcType"]:checked').value;
-
-        if (logs !== "" && logs >= 0) {
-            let roundedHours = Math.round(parseFloat(logs) / 12);
-            let mention = copyID !== "" ? `<@${copyID}>` : "";
-            
-            liveUpdate();
-
-            let title = (calcType === "weekly") 
-                ? "ساعاتك هذا الاسبوع حتى تاريخ طلب المناقشة" 
-                : "ساعاتك من اصل 30 ساعه حتى تاريخ طلب المناقشة";
-
-            const template = `${title}
-ساعاتك الاجمالية (${roundedHours})
-شاكرين لـ اهتمامك
-${mention}`;
-
-            resultArea.value = template;
-            copyBtn.style.display = 'block';
-            copyBtn.innerText = "نسخ";
-            copyBtn.style.backgroundColor = "var(--success)";
-        } else {
-            alert("يرجى إدخال عدد لوقات صحيح");
-        }
-    }
-
-    function resetForm() {
-        document.getElementById('copyID').value = "";
-        document.getElementById('logsCount').value = "";
-        document.getElementById('resultArea').value = "";
-        document.getElementById('copyBtn').style.display = 'none';
-        document.getElementById('progressBar').style.width = '0%';
-        document.getElementById('progressBar').innerText = '0%';
-        document.getElementById('remainingText').innerText = '';
-        document.getElementById('progressContainer').style.display = 'none';
-        document.getElementById('remainingText').style.display = 'none';
-        document.querySelector('input[name="calcType"][value="weekly"]').checked = true;
-    }
-
-    async function copyFinalText() {
-        const resultArea = document.getElementById('resultArea');
-        const btn = document.getElementById('copyBtn');
+    async function copyFinalText(aId, bId) {
+        const area = document.getElementById(aId);
+        const btn = document.getElementById(bId);
+        if(!area.value) return;
         try {
-            await navigator.clipboard.writeText(resultArea.value);
-            btn.innerText = "✅ تم النسخ!";
+            await navigator.clipboard.writeText(area.value);
+            const old = btn.innerText; btn.innerText = "✅ تم النسخ!";
             btn.style.backgroundColor = "#155724";
-            setTimeout(() => {
-                btn.innerText = "نسخ";
-                btn.style.backgroundColor = "var(--success)";
-            }, 2000);
-        } catch (err) {
-            alert("فشل النسخ");
-        }
+            setTimeout(() => { btn.innerText = old; btn.style.backgroundColor = "var(--success)"; }, 2000);
+        } catch (e) { alert("خطأ في النسخ"); }
     }
 </script>
-
 </body>
 </html>
-
-
