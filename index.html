@@ -255,7 +255,6 @@
             <option value="">-- اختر من القائمة --</option>
             <option value="success_fail_main">النجاح والرسوب في الونقات </option>
             <option value="1">رفض الونقات </option>
-            <option value="3">مهلة الونقات </option>
         </select>
 
         <div id="successTypeContainer" class="sub-container">
@@ -583,7 +582,6 @@
         const checkedCheckboxes = document.querySelectorAll('input[name="rankSub"]:checked');
         const selectedRanks = Array.from(checkedCheckboxes).map(cb => cb.value).join(' + ');
         if(v=="1") m = `EMS Academy\n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجاوب و ارسال المطلوب منك\nتم رفض الونقات وبامكانك التقديم مره اخرى **\n\n${selectedRanks}\n\n${mention}`;
-        else if(v=="3") m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجواب و ارسال المطلوب منك\nسيتم اعطائك مهلة لمدة اسبوع لتسليم المطلوب منك **\n\n**وفي حال عدم تسليم المطلوب منك سيتم رفض الونق و احتساب لك رسوب **\n\n${mention}`;
         else if(v=="success_fail_main") {
             const successType = document.querySelector('input[name="successType"]:checked').value;
             if (successType === "only") m = `EMS Academy \n\n**السلام عليكم ورحمة الله وبركاتة\nيسرنا ابلاغك بالنجاح في الوينقات التاليه **\n\n${selectedRanks}\n\n${mention}`;
