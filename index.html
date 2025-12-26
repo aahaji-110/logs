@@ -231,7 +231,6 @@
             <option value="1">الخروج من التدريب لظرف</option>
             <option value="2">تغيير اسم الكركتر</option>
             <option value="3">ما أقدر أحضر الاختبار</option>
-            <option value="4">الاكتفاء بالاختبار</option>
             <option value="5">موعد التدريب والاختبار</option>
         </select>
         <div id="subOptionContainer" class="sub-container">
@@ -420,6 +419,7 @@
             <option value="<@&1034138289369776240>">Supervisor of EMS Academy</option>
             <option value="<@&606314427415003155>">EMS Chief</option>
             <option value="<@&1033753536594464869>">Ems Academy Commander</option>
+            <option value="<@&1033756217409032326>">Deputy</option>
         </select>
 
         <span class="label">الوقت (Time):</span>
@@ -565,7 +565,6 @@
             subContainer.style.display = 'none';
             if(mainVal=="2") message=header+"يرجى منك ارفاق :\n- الأسم القديم\n- الأسم الجديد\nوسيتم مراجعة موضوعك **";
             if(mainVal=="3") message=header+"حضور الاختبار اجباري و عدم حضورك لة يتم استبعادك مباشرة **";
-            if(mainVal=="4") message=header+"حضور التدريب اجباري و عدم حضورك يتم استبعادك مباشرة لكن بأمكانك طلب فرصة حضور الاختبار في موعد الاختبار و سيتم مراجعة موضوعك من قبل المسؤولين **";
             if(mainVal=="5") message=header+"في حال تم تحديد موعد التدريب و الاختبار سيتم الاعلان عنة في القنوات المخصصة **";
         }
         document.getElementById('ticketResult').value = message;
