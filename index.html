@@ -63,9 +63,9 @@
         .btn-control {
             cursor: pointer;
             background: var(--bg-body);
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11px;
             border: 1px solid var(--border);
             user-select: none;
             transition: 0.3s;
@@ -115,6 +115,28 @@
         input, select, textarea {
             width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 10px;
             box-sizing: border-box; background-color: var(--bg-card); color: var(--text-main); text-align: center; font-size: 1em;
+        }
+
+        /* إخفاء الأسهم */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .input-group {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .input-group input { margin-bottom: 0; flex: 1; }
+        .btn-add {
+            width: 45px;
+            background: var(--success);
+            border-radius: 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         .search-input {
@@ -186,8 +208,8 @@
 
 <div class="container">
     <div class="controls-top">
-        <div class="btn-control" onclick="changeFontSize(2)">A+</div>
-        <div class="btn-control" onclick="changeFontSize(-2)">A-</div>
+        <div class="btn-control" onclick="changeFontSize(1)">تكبير الخط</div>
+        <div class="btn-control" onclick="changeFontSize(-1)">تصغير الخط</div>
         <div class="btn-control" id="themeBtn" onclick="toggleTheme()">☀️</div>
     </div>
 
@@ -203,7 +225,7 @@
     <div id="calcTab" class="tab-content active">
         <h2>حاسبة ساعات المسعفين</h2>
         <span class="label">رقم دسكورد المسعف:</span>
-        <input type="number" id="copyID" placeholder="أدخل الرقم هنا">
+        <input type="text" id="copyID" placeholder="أدخل الرقم هنا" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         <span class="label">نوع الحسبة:</span>
         <div class="calc-options">
             <label class="option-item"><input type="radio" name="calcType" value="weekly" checked onclick="handleCalcTypeChange(false)"> حسبة أسبوعية</label>
@@ -214,7 +236,7 @@
             <div id="remainingText"></div>
         </div>
         <span class="label">عدد اللوقات:</span>
-        <input type="number" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="liveUpdate30()">
+        <input type="text" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="this.value = this.value.replace(/[^0-9]/g, ''); liveUpdate30()">
         <button onclick="calculateHoursFinal()">حساب</button>
         <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
         <button id="copyBtn1" class="copy-btn" onclick="copyFinalText('resultArea', 'copyBtn1')" style="display: none;">نسخ</button>
@@ -246,10 +268,8 @@
 
     <div id="variousTab" class="tab-content">
         <h2>ردود متنوعة</h2>
-        <span class="label">الاسم (الموظف):</span>
-        <input type="text" id="staffName2" placeholder="أدخل اسمك" oninput="updateVariousReply()">
         <span class="label">رقم دسكورد المسعف:</span>
-        <input type="number" id="medicID" placeholder="رقم الدسكورد" oninput="updateVariousReply()">
+        <input type="text" id="medicID" placeholder="رقم الدسكورد" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateVariousReply()">
         <span class="label">اختر الحالة:</span>
         <select id="variousSelect" onchange="updateVariousReply()">
             <option value="">-- اختر من القائمة --</option>
@@ -282,12 +302,17 @@
     <div id="summonTab" class="tab-content">
         <h2>استدعاء (Summon)</h2>
         <span class="label">رقم دسكورد المسعف:</span>
-        <input type="number" id="medicID_summon" placeholder="رقم الدسكورد" oninput="updateSummonReply()">
+        <div id="medicIDList">
+            <div class="input-group">
+                <input type="text" class="medic-id-input" placeholder="رقم الدسكورد" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummonReply()">
+                <button class="btn-add" onclick="addMedicField()">+</button>
+            </div>
+        </div>
 
         <span class="label">ابحث برقم البند أو بكلمة:</span>
         <input type="text" id="reasonSearch" class="search-input" placeholder="مثال: 0-1 أو معدات..." oninput="filterReasons()">
         
-        <span class="label">البند / الأسباب (اختيار متعدد):</span>
+        <span class="label">البند / الأسباب (  لاختيار اكثر من بند Ctrl ) :</span>
         <select id="summonReason" multiple onchange="trackSelection(this); updateSummonReply()">
             <optgroup label="بنود الدرجة صفر (0)">
                 <option value="0-1">0-1: توزيع المعدات الصحية للمواطنين او العساكر (باند بيرم)</option>
@@ -386,9 +411,9 @@
                 <option value="4-2">4-2: عدم أداء مهمتك بشكل احترافي</option>
                 <option value="4-3">4-3: التقصير في الرقابة والكشف على المريض او الرهينة</option>
                 <option value="4-4">4-4: التستر على مسعف غير جدي وثبت علمك به</option>
-                <option value="4-5">4-5: معالجة شخص مسقط كامل او شخص حالته تجب نقله للمستشفى</option>
+                <option value="4-5">4-5: معالجة person مسقط كامل او person حالته تجب نقله للمستشفى</option>
                 <option value="4-6">4-6: مساعدة العسكر في القبض على المجرمين الهاربين في المستشفى</option>
-                <option value="4-7">4-7: بوجود وحدات الـ EMS معالجة شخص فالمستشفى لغير قطاع الـ</option>
+                <option value="4-7">4-7: بوجود وحدات الـ EMS معالجة person فالمستشفى لغير قطاع الـ</option>
                 <option value="4-8">4-8: التدخل في القطاع الآخر</option>
                 <option value="4-9">4-9: DS عدم نقل المجرمين او المسقطين او التواجد من موقع اطلاق النار الا في حال وجود وينق</option>
                 <option value="4-10">4-10: عدم حضور الاستدعاء</option>
@@ -465,52 +490,54 @@
         let select = document.getElementById('summonReason');
         let options = select.getElementsByTagName('option');
         let groups = select.getElementsByTagName('optgroup');
-
         for (let i = 0; i < options.length; i++) {
             let txt = options[i].text.toLowerCase();
             let val = options[i].value.toLowerCase();
-            if (txt.includes(input) || val.includes(input)) {
-                options[i].style.display = "";
-            } else {
-                options[i].style.display = "none";
-            }
+            options[i].style.display = (txt.includes(input) || val.includes(input)) ? "" : "none";
         }
-        
         for (let g = 0; g < groups.length; g++) {
             let visible = false;
             let opts = groups[g].getElementsByTagName('option');
-            for (let o = 0; o < opts.length; o++) {
-                if (opts[o].style.display !== "none") { visible = true; break; }
-            }
+            for (let o = 0; o < opts.length; o++) { if (opts[o].style.display !== "none") { visible = true; break; } }
             groups[g].style.display = visible ? "" : "none";
         }
     }
 
     function trackSelection(select) {
         let currentValues = Array.from(select.selectedOptions).map(opt => opt.value);
-        currentValues.forEach(val => {
-            if (!selectedOrder.includes(val)) selectedOrder.push(val);
-        });
+        currentValues.forEach(val => { if (!selectedOrder.includes(val)) selectedOrder.push(val); });
         selectedOrder = selectedOrder.filter(val => currentValues.includes(val));
     }
 
     function undoSelection() {
         if (selectedOrder.length > 0) {
-            let lastVal = selectedOrder.pop();
+            selectedOrder.pop();
             let select = document.getElementById('summonReason');
-            for (let opt of select.options) {
-                if (opt.value === lastVal) opt.selected = false;
-            }
+            for (let opt of select.options) opt.selected = selectedOrder.includes(opt.value);
             updateSummonReply();
         }
     }
 
+    // وظيفة "مسح الكل" المطورة لإعادة النموذج للحالة الأولى
     function resetSelection() {
+        // 1. تصفير مصفوفة الاختيارات
         selectedOrder = [];
+        // 2. تصفير خانة البحث وفلترة القائمة
         document.getElementById('reasonSearch').value = "";
         filterReasons();
+        // 3. إلغاء تحديد كل الخيارات في القائمة
         let select = document.getElementById('summonReason');
         for (let opt of select.options) opt.selected = false;
+        // 4. تصفير كل حقول أرقام الدسكورد (الأساسية والمضافة)
+        document.getElementById('medicIDList').innerHTML = `
+            <div class="input-group">
+                <input type="text" class="medic-id-input" placeholder="رقم الدسكورد" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummonReply()">
+                <button class="btn-add" onclick="addMedicField()">+</button>
+            </div>
+        `;
+        // 5. تصفير مربع النص النهائي
+        document.getElementById('summonResult').value = "";
+        // 6. تحديث الحالة (سيعود للنص الافتراضي)
         updateSummonReply();
     }
 
@@ -552,7 +579,6 @@
         const subContainer = document.getElementById('subOptionContainer');
         const header = `EMS FTO | أكاديمية الصحة\n**حياك الله , معك ${name} من أكاديمية الصحة\n\n`;
         let message = "";
-        
         if (mainVal === "6") {
             subContainer.style.display = 'none';
             message = `**\`- EMS FTO | أكاديمية وزارة الصحة - \`**\n**حياك الله , معك ${name} من أكاديمية وزارة الصحة***`;
@@ -573,12 +599,9 @@
         const mid = document.getElementById('medicID').value;
         const mention = `<@${mid}>`;
         const v = document.getElementById('variousSelect').value;
-
         document.getElementById('successTypeContainer').style.display = (v === "success_fail_main") ? 'block' : 'none';
         document.getElementById('variousSubContainer').style.display = (v === "1" || v === "success_fail_main") ? 'block' : 'none';
-
         let m = "";
-
         const checkedCheckboxes = document.querySelectorAll('input[name="rankSub"]:checked');
         const selectedRanks = Array.from(checkedCheckboxes).map(cb => cb.value).join(' + ');
         if(v=="1") m = `EMS Academy\n\n**السلام عليكم ورحمة الله وبركاتة\nنظراً لأهمالك للونقات و عدم التجاوب و ارسال المطلوب منك\nتم رفض الونقات وبامكانك التقديم مره اخرى **\n\n${selectedRanks}\n\n${mention}`;
@@ -590,15 +613,23 @@
         document.getElementById('variousResult').value = m;
     }
 
+    function addMedicField() {
+        const container = document.getElementById('medicIDList');
+        const div = document.createElement('div');
+        div.className = 'input-group';
+        div.innerHTML = `<input type="text" class="medic-id-input" placeholder="رقم الدسكورد" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummonReply()"><button class="btn-add" style="background:var(--danger)" onclick="this.parentElement.remove(); updateSummonReply()">-</button>`;
+        container.appendChild(div);
+    }
+
     function updateSummonReply() {
-        const mid = document.getElementById('medicID_summon').value;
-        const mention = `<@${mid}>`;
+        const inputs = document.querySelectorAll('.medic-id-input');
+        let mentions = [];
+        inputs.forEach(input => { if(input.value.trim() !== "") mentions.push(`<@${input.value.trim()}>`); });
+        const mentionString = mentions.length > 0 ? mentions.join(' + ') : "(رقم الدسكورد)";
         const reasonString = selectedOrder.length > 0 ? selectedOrder.join(' + ') : " ";
         const time = document.getElementById('summonTime').value;
         const from = document.getElementById('summonFrom').value;
-        
-        let m = `**Name : [ ${mention} ]\nReason : [ ${reasonString} ]\nSummon From : ${from}\nTime : [ ${time} ] **\n\n\`في حال ما ناسبك الوقت تواصل معي في الخاص لتغييره في الـ 24 ساعة المقبلة\``;
-
+        let m = `**Name : [ ${mentionString} ]\nReason : [ ${reasonString} ]\nSummon From : ${from}\nTime : [ ${time} ] **\n\n\`في حال ما ناسبك الوقت تواصل معي في الخاص لتغييره في الـ 24 ساعة المقبلة\``;
         document.getElementById('summonResult').value = m;
     }
 
