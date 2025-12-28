@@ -7,7 +7,7 @@
     <style>
         :root {
             --primary: #007bff;
-            --success: #28a745;
+            --success: #5f8059; /* درجة الأخضر المرفقة بالصورة */
             --warning: #e67e22;
             --danger: #dc3545;
             --bg-body: #121212;
@@ -46,9 +46,38 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             text-align: center;
             position: relative;
+        }
+
+        /* تنسيق الهيدر الجديد */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        .header-logo {
+            max-width: 100px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .header-text {
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .separator {
+            height: 2px;
+            background: linear-gradient(to left, transparent, var(--success), transparent);
+            margin-bottom: 20px;
+            opacity: 0.6;
         }
 
         .controls-top {
@@ -56,28 +85,37 @@
             top: 15px;
             left: 15px;
             display: flex;
-            gap: 5px;
+            align-items: center;
+            gap: 8px;
             z-index: 100;
+        }
+
+        .font-control-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-body);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 2px 5px;
         }
 
         .btn-control {
             cursor: pointer;
-            background: var(--bg-body);
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            border: 1px solid var(--border);
+            padding: 4px 8px;
+            font-size: 14px;
             user-select: none;
             transition: 0.3s;
             color: var(--text-main);
             font-weight: bold;
         }
-        .btn-control:hover { background: var(--primary); color: white; }
+        .btn-control:hover { color: var(--success); }
 
-        .logo-img {
-            max-width: 140px;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        .theme-toggle {
+            cursor: pointer;
+            background: var(--bg-body);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
         .tabs-header {
@@ -90,7 +128,7 @@
         .tab-link {
             padding: 10px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: bold;
             color: var(--text-main);
             opacity: 0.6;
@@ -100,8 +138,8 @@
 
         .tab-link.active {
             opacity: 1;
-            border-bottom: 3px solid var(--primary);
-            color: var(--primary);
+            border-bottom: 3px solid var(--success);
+            color: var(--success);
         }
 
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
@@ -109,7 +147,7 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        h2 { margin: 0 auto 20px auto; font-size: 1.4em; border-bottom: 3px solid var(--primary); display: table; padding-bottom: 5px; font-weight: 800; }
+        h2 { margin: 0 auto 20px auto; font-size: 1.3em; border-bottom: 3px solid var(--success); display: table; padding-bottom: 5px; font-weight: 800; }
         .label { font-weight: bold; margin-bottom: 8px; display: block; text-align: right; font-size: 0.85em; }
         
         input, select, textarea {
@@ -117,7 +155,6 @@
             box-sizing: border-box; background-color: var(--bg-card); color: var(--text-main); text-align: center; font-size: 1em;
         }
 
-        /* إخفاء الأسهم */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
@@ -128,6 +165,7 @@
             margin-bottom: 10px;
         }
         .input-group input { margin-bottom: 0; flex: 1; }
+        
         .btn-add {
             width: 45px;
             background: var(--success);
@@ -140,8 +178,8 @@
         }
 
         .search-input {
-            border: 2px solid var(--primary);
-            background-color: rgba(0, 123, 255, 0.05);
+            border: 2px solid var(--success);
+            background-color: rgba(95, 128, 89, 0.05);
             margin-bottom: 5px;
             font-size: 0.9em;
         }
@@ -155,7 +193,7 @@
             padding: 10px 5px; border-radius: 8px; border: 1px solid var(--border);
             transition: 0.2s;
         }
-        .option-item:hover { border-color: var(--primary); }
+        .option-item:hover { border-color: var(--success); }
         .option-item input { width: auto; margin: 0 0 0 8px; cursor: pointer; }
 
         .action-btns { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -170,50 +208,61 @@
             position: relative;
         }
         #progressBar {
-            height: 100%; background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%; background: linear-gradient(90deg, var(--success), #7fa377);
             width: 0%; transition: width 0.5s ease; display: flex; align-items: center;
             justify-content: center; color: white; font-weight: bold; font-size: 12px;
         }
         #remainingText { font-size: 0.9em; color: var(--warning); font-weight: bold; margin-top: 8px; display: block; }
 
         .sub-container {
-            background: rgba(0, 123, 255, 0.05);
+            background: rgba(95, 128, 89, 0.05);
             padding: 15px;
             border-radius: 15px;
             margin-bottom: 15px;
-            border: 1px solid var(--primary);
+            border: 1px solid var(--success);
             display: none;
             animation: fadeIn 0.3s ease;
         }
 
         button {
-            width: 100%; padding: 14px; background-color: var(--primary);
+            width: 100%; padding: 14px; background-color: var(--success);
             color: white; border: none; border-radius: 10px;
             cursor: pointer; font-size: 1em; font-weight: bold; transition: 0.3s;
         }
         button:hover { opacity: 0.9; transform: translateY(-2px); }
+        
         .copy-btn { background-color: var(--success); margin-top: 15px; }
 
         textarea {
             height: 200px; margin-top: 20px; border: 2px dashed var(--success);
-            background: rgba(40, 167, 69, 0.05); border-radius: 10px; padding: 10px;
+            background: rgba(95, 128, 89, 0.05); border-radius: 10px; padding: 10px;
             resize: none; font-weight: bold; color: var(--text-main); text-align: center;
         }
 
         .footer { margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 0.75em; color: #888; }
-        .footer strong { color: var(--primary); }
+        .footer strong { color: var(--success); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="controls-top">
-        <div class="btn-control" onclick="changeFontSize(1)">تكبير الخط</div>
-        <div class="btn-control" onclick="changeFontSize(-1)">تصغير الخط</div>
-        <div class="btn-control" id="themeBtn" onclick="toggleTheme()">☀️</div>
+        <div class="font-control-wrapper">
+            <div class="btn-control" onclick="changeFontSize(1)">+</div>
+            <div class="btn-control" style="cursor:default; hover:none;">A</div>
+            <div class="btn-control" onclick="changeFontSize(-1)">-</div>
+        </div>
+        <div class="theme-toggle" id="themeBtn" onclick="toggleTheme()">☀️</div>
     </div>
 
-    <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="logo-img">
+    <div class="header-section">
+        <img src="https://www2.0zz0.com/2025/12/22/17/297618659.png" alt="شعار الأكاديمية" class="header-logo">
+        <div class="header-text">
+            Ministry Of Health<br>
+            EMS Academy
+        </div>
+    </div>
+    <div class="separator"></div>
     
     <div class="tabs-header">
         <div class="tab-link active" onclick="openTab(event, 'calcTab')">logs Calculator</div>
@@ -518,26 +567,19 @@
         }
     }
 
-    // وظيفة "مسح الكل" المطورة لإعادة النموذج للحالة الأولى
     function resetSelection() {
-        // 1. تصفير مصفوفة الاختيارات
         selectedOrder = [];
-        // 2. تصفير خانة البحث وفلترة القائمة
         document.getElementById('reasonSearch').value = "";
         filterReasons();
-        // 3. إلغاء تحديد كل الخيارات في القائمة
         let select = document.getElementById('summonReason');
         for (let opt of select.options) opt.selected = false;
-        // 4. تصفير كل حقول أرقام الدسكورد (الأساسية والمضافة)
         document.getElementById('medicIDList').innerHTML = `
             <div class="input-group">
                 <input type="text" class="medic-id-input" placeholder="رقم الدسكورد" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummonReply()">
                 <button class="btn-add" onclick="addMedicField()">+</button>
             </div>
         `;
-        // 5. تصفير مربع النص النهائي
         document.getElementById('summonResult').value = "";
-        // 6. تحديث الحالة (سيعود للنص الافتراضي)
         updateSummonReply();
     }
 
@@ -640,7 +682,7 @@
         try {
             await navigator.clipboard.writeText(area.value);
             const old = btn.innerText; btn.innerText = "✅ تم النسخ!";
-            btn.style.backgroundColor = "#155724";
+            btn.style.backgroundColor = "#2d3d2a";
             setTimeout(() => { btn.innerText = old; btn.style.backgroundColor = "var(--success)"; }, 2000);
         } catch (e) { alert("خطأ في النسخ"); }
     }
