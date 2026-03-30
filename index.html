@@ -270,6 +270,7 @@
         <div class="tab-link" onclick="openTab(event, 'ticketTab')">Ticket Replies</div>
         <div class="tab-link" onclick="openTab(event, 'variousTab')">Various Replies</div>
         <div class="tab-link" onclick="openTab(event, 'summonTab')">Summon</div>
+        <div class="tab-link" onclick="openTab(event, 'decisionsTab')">Decisions</div>
     </div>
 
     <div id="calcTab" class="tab-content active">
@@ -510,6 +511,162 @@
         <button id="copyBtn4" class="copy-btn" onclick="copyFinalText('summonResult', 'copyBtn4')">نسخ الرد</button>
     </div>
 
+    <!-- New Decisions Tab (القرارات) -->
+    <div id="decisionsTab" class="tab-content">
+        <h2>القرارات (Decisions)</h2>
+        <span class="label">رقم دسكورد المسعف :</span>
+        <input type="text" id="decisionMedicID" placeholder="أدخل الرقم هنا" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateDecisionReply()">
+        
+        <span class="label">القرار أو العقوبة :</span>
+        <input type="text" id="decisionPenalty" placeholder="مثال: إنذار / خصم نقاط / فصل مؤقت" oninput="updateDecisionReply()">
+
+        <span class="label">ابحث برقم البند أو بكلمة :</span>
+        <input type="text" id="decisionSearch" class="search-input" placeholder="مثال: 0-1 أو معدات..." oninput="filterDecisionReasons()">
+        
+        <span class="label">السبب (Reason) :</span>
+        <select id="decisionReason" multiple onchange="trackDecisionSelection(this); updateDecisionReply()">
+            <optgroup label="بنود الدرجة صفر (0)">
+                <option value="0-1">0-1: توزيع المعدات الصحية للمواطنين او العساكر (باند بيرم)</option>
+                <option value="0-2">0-2: فرض سلطة بحق أو بغير حق</option>
+                <option value="0-3">0-3: الكذب على المسؤولين</option>
+                <option value="0-4">0-4: سوء التعامل مع الرتب العليا</option>
+                <option value="0-5">0-5: حمل معدات غير قانونية ولا تليق بالإسعاف</option>
+                <option value="0-6">0-6: مناقشة امور الصحة امام العامة</option>
+                <option value="0-7">0-7: سوء تعامل مع حالة</option>
+                <option value="0-8">0-8: الاستخدام الخاطئ للمورفين</option>
+                <option value="0-9">0-9: فساد مسعف (اسعاف مجرم بدون اذن عسكري، نقل مجرمين بدون عسكري الخ)</option>
+                <option value="0-10">0-10: تسريب جداول الصحة ومعلومات أخرى</option>
+                <option value="0-11">0-11: عدم الجدية أثناء الدوام</option>
+                <option value="0-12">0-12: عدم المساواة بين الجميع</option>
+                <option value="0-13">0-13: الاعتراض على قرارات إدارة الصحة</option>
+                <option value="0-14">0-14: سوء التعامل مع باقي المسعفين او العساكر او المواطنين</option>
+                <option value="0-15">0-15: عدم الالتزام بأوامر الرتب العليا</option>
+                <option value="0-16">0-16: التستر على مجرم او محاولة تهريب مجرم او فساد مسعف (باند)</option>
+                <option value="0-17">0-17: صرف العكاز او الكرسي المتحرك او البودي باق في الحالات الغير ضرورية</option>
+                <option value="0-18">0-18: تلاعب في معلومات HR</option>
+                <option value="0-19">0-19: اعطاء كول اوت او معلومات عن تواجد وأماكن المجرمين أثناء الفايت او العسكر (باند)</option>
+                <option value="0-20">0-20: ارسال شخص للمصحة بغير سبب او ترول او لا تنطبق عليه قوانين المصحة</option>
+                <option value="0-21">0-21: تذكير العساكر المسقطين او المجرمين بمجريات الحالة السابقة (باند)</option>
+                <option value="0-22">0-22: الاساءة لوزارة الصحة او مسؤوليها او انظمتها باي شكل من الاشكال</option>
+                <option value="0-23">0-23: استخدام او استغلال صلاحيات ونق الكوماند بشكل خاطئ</option>
+            </optgroup>
+            <optgroup label="بنود الدرجة الأولى (1)">
+                <option value="1-1">1-1: عدم تحديث حالة المصاب أو المسقط للديسباتش حين وصول الموقع</option>
+                <option value="1-2">1-2: مباشرة حالة دون استخدام الأكواد</option>
+                <option value="1-3">1-3: عدم تعيين نائب لمركز العمليات</option>
+                <option value="1-4">1-4: استخدام كود 3 او كود 2 بلا سبب</option>
+                <option value="1-5">1-5: الأخطاء المتكررة ببروتوكولات الراديو</option>
+                <option value="1-6">1-6: التهرب من استلام مركز العمليات</option>
+                <option value="1-7">1-7: عدم الرد على المسقطين في الـ 997</option>
+                <option value="1-8">1-8: الخروج بدون إذن مركز العمليات</option>
+                <option value="1-9">1-9: عدم اخذ اذن من الديسباتش للتوجه الى المطعم او الورشة</option>
+                <option value="1-10">1-10: لبس ملابس او اضافات (قبعة، نظاره، الخ) لا تليق بعملك كمسعف</option>
+                <option value="1-11">1-11: اضافة وشوم على الوجه او مستلزمات تشوه الوجه</option>
+                <option value="1-12">1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير</option>
+                <option value="1-13">1-13: التأفيك او اخذ غفوه في الأماكن الغير مخصصه للتأفيك</option>
+                <option value="1-14">1-14: القصور في كتابة التقارير الطبية للمريض</option>
+                <option value="1-15">1-15: التجمع في اماكن عشوائيه وعدم التواجد عند الاستقبال</option>
+            </optgroup>
+            <optgroup label="بنود الدرجة الثانية (2)">
+                <option value="2-1">2-1: EMS المعالجة داخل المستشفى بوجود قطاع الـ</option>
+                <option value="2-2">2-2: التوجه لموجة العسكر دون اذن الدسباتش</option>
+                <option value="2-3">2-3: معالجة شخص او مصاب في اماكن عامه او مكتظة أو في منتصف الشارع</option>
+                <option value="2-4">2-4: مقاطعة البلاغات في الراديو</option>
+                <option value="2-5">2-5: عدم تسجيل الخروج بعد أخذ غفوة</option>
+                <option value="2-6">2-6: عدم الالتزام بالمعدات الخاصة بك</option>
+                <option value="2-7">2-7: عدم الالتزام بالملابس الموجودة في الجدول</option>
+                <option value="2-8">2-8: التوجه للدسباتش شخصياً وطلب توجيه</option>
+                <option value="2-9">2-9: الركض بالمستشفى دون سبب أو حالة</option>
+                <option value="2-10">2-10: عدم التواجد في الراديو</option>
+                <option value="2-11">2-11: مباشرة الايرشب بدون لبس الوينق</option>
+                <option value="2-12">2-12: عدم الالتزام بالمركبات المخصصة لك</option>
+                <option value="2-13">2-13: استخدام المركبات لتوصيل المواطنين او العساكر</option>
+                <option value="2-14">2-14: اجراء عمل طبي دون موافقة المريض</option>
+                <option value="2-15">2-15: اخذ غفوة بدون اذن من الدسباتش</option>
+                <option value="2-16">2-16: عدم الالتزام بالكول ساين المخصص لك</option>
+                <option value="2-17">2-17: استخدام صلاحيات المنشن لغير المصرح لهم</option>
+                <option value="2-18">2-18: عدم الالتزام بالوان المركبات التي تخص الصحة</option>
+                <option value="2-19">2-19: عدم الالتزام ببروتوكولات الراديو</option>
+                <option value="2-20">2-20: تجاهل احتياج الميدان للوحدات والاستمرار كمواطن</option>
+            </optgroup>
+            <optgroup label="بنود الدرجة الثالثة (3)">
+                <option value="3-1">3-1: عدم التأكد من حالة الرهائن بشكل صحيح</option>
+                <option value="3-2">3-2: الوقوف الخاطئ</option>
+                <option value="3-3">3-3: اهمال المركبات بأماكن عشوائيه او امام المستشفى</option>
+                <option value="3-4">3-4: تدخل في حالة مسعف اخر</option>
+                <option value="3-5">3-5: اهمال الدسباتش وعدم التوجيه لحالات الـ 997 او عدم الرد على البلاغات</option>
+                <option value="3-6">3-6: مناقشة الدسباتش في الراديو</option>
+                <option value="3-7">3-7: عدم اقفال غرفة الملابس والمعدات</option>
+                <option value="3-8">3-8: عدم نقل المتفجرين أو المنتحرين إلى المشرحة</option>
+                <option value="3-9">3-9: استخدام صلاحيات الاسعاف بشكل خاطئ (الكلبشه)</option>
+                <option value="3-10">3-10: عدم كتابة التقارير في الحالات الجنائية</option>
+                <option value="3-11">3-11: طلب اجازه والدخول بشخصية اخرى</option>
+                <option value="3-12">3-12: نقل المجرمين بدون وجود وحدة عسكرية</option>
+                <option value="3-13">3-13: عدم حضور اجتماع</option>
+                <option value="3-14">3-14: اهمال المريض وعدم التجاوب معه</option>
+                <option value="3-15">3-15: التوجه للحالات بدون علم الدسباتش</option>
+                <option value="3-16">3-16: إهمال تحديث بيانات</option>
+                <option value="3-17">3-17: إهمال التوجه للبلاغات الاسعافيه او الحالات الجنائيه</option>
+                <option value="3-18">3-18: مخالفة تعميم</option>
+                <option value="3-19">3-19: توزيع اكثر من 5 باندج للمواطنين</option>
+                <option value="3-20">3-20: اجراء عملية دون اختصاص</option>
+                <option value="3-21">3-21: إهمال الأوبجيكتات في أماكن غير مناسبه او بشكل عشوائي</option>
+                <option value="3-22">3-22: إهمال مباشرة الميدان</option>
+                <option value="3-23">3-23: تدبيل البانيك</option>
+                <option value="3-24">3-24: عدم الالتزام بالزون المحدد لك</option>
+                <option value="3-25">3-25: اهمال الوينقات</option>
+                <option value="3-26">3-26: اهمال متطلبات الاستجداد</option>
+            </optgroup>
+            <optgroup label="بنود الدرجة الرابعة (4)">
+                <option value="4-1">4-1: استخراج هيلي بدون وينق</option>
+                <option value="4-2">4-2: عدم أداء مهمتك بشكل احترافي</option>
+                <option value="4-3">4-3: التقصير في الرقابة والكشف على المريض او الرهينة</option>
+                <option value="4-4">4-4: التستر على مسعف غير جدي وثبت علمك به</option>
+                <option value="4-5">4-5: معالجة person مسقط كامل او person حالته تجب نقله للمستشفى</option>
+                <option value="4-6">4-6: مساعدة العسكر في القبض على المجرمين الهاربين في المستشفى</option>
+                <option value="4-7">4-7: بوجود وحدات الـ EMS معالجة person فالمستشفى لغير قطاع الـ</option>
+                <option value="4-8">4-8: التدخل في القطاع الآخر</option>
+                <option value="4-9">4-9: DS عدم نقل المجرمين او المسقطين او التواجد من موقع اطلاق النار الا في حال وجود وينق</option>
+                <option value="4-10">4-10: عدم حضور الاستدعاء</option>
+                <option value="4-11">4-11: مباشرة الميدان بوجود مرافقين او أكثر</option>
+                <option value="4-12">4-12: عدم الالتزام بأوامر مركز العمليات</option>
+                <option value="4-13">4-13: مناقشة امور الشؤون داخل السيرفر</option>
+                <option value="4-14">4-14: استخدام العيادات لغير المصرح لهم</option>
+                <option value="4-15">4-15: طلب ترقيه او نقاط او مركبات او تلميح لها</option>
+                <option value="4-16">4-16: (CO) استخدام كود الكوماند دون وجود الونق</option>
+                <option value="4-17">4-17: تخطي المراجع وعدم الالتزام بالتسلسل الوزاري</option>
+                <option value="4-18">4-18: ضرب المواطنين او المسعفين الآخرين او التصادم المتكرر بالمركبات</option>
+                <option value="4-19">4-19: اهمال الكوماند وعدم ضبط الميدان</option>
+                <option value="4-20">4-20: توجيه اكثر من وحده اسعافيه لرهينة واحدة</option>
+                <option value="4-21">4-21: إنعاش EMS خارج غرفة الطوارئ أو المستشفى لغير قطاع الـ</option>
+            </optgroup>
+        </select>
+        
+        <div class="action-btns">
+            <button class="btn-small btn-undo" onclick="undoDecisionSelection()">↩️ تراجع عن البند</button>
+            <button class="btn-small btn-reset" onclick="resetDecisionSelection()">🗑️ مسح البيانات</button>
+        </div>
+
+        <span class="label">تنويه:</span>
+        <input type="text" id="decisionNote" placeholder="إضافة أي ملاحظات إضافية (اختياري)" oninput="updateDecisionReply()">
+
+        <span class="label">رقم القرار:</span>
+        <input type="text" id="decisionNumber" placeholder="مثال: 2025-001" oninput="updateDecisionReply()">
+
+        <span class="label">القرار من طرف:</span>
+        <select id="decisionIssuer" onchange="updateDecisionReply()">
+            <option value="EMS FTO">EMS FTO</option>
+            <option value="EMS Academy Deputy">EMS Academy Deputy</option>
+            <option value="Supervisor of EMS Academy">Supervisor of EMS Academy</option>
+            <option value="EMS Chief">EMS Chief</option>
+            <option value="Ems Academy Commander">Ems Academy Commander</option>
+            <option value="Deputy">Deputy</option>
+        </select>
+
+        <textarea id="decisionResult" readonly placeholder="سيظهر القرار هنا..."></textarea>
+        <button id="copyBtn5" class="copy-btn" onclick="copyFinalText('decisionResult', 'copyBtn5')">نسخ القرار</button>
+    </div>
+
     <div class="footer">
         الحقوق محفوظة لـ: <strong>علي الحاجي</strong> <br>
         Discord : <strong>ali_go</strong>
@@ -519,6 +676,7 @@
 <script>
     let currentFS = 16;
     let selectedOrder = [];
+    let selectedDecisionOrder = [];
 
     function changeFontSize(delta) {
         currentFS += delta; currentFS = Math.max(12, Math.min(26, currentFS));
@@ -618,7 +776,6 @@
         
         let h = Math.round(parseFloat(logs) / 12);
         
-        // الجزء الجديد لإصلاح القواعد اللغوية
         let hourText = "";
         if (h === 1) {
             hourText = "ساعة واحدة";
@@ -708,6 +865,81 @@ ${detailText}
         const from = document.getElementById('summonFrom').value;
         let m = `**Name : [ ${mentionString} ]\nReason : [ ${reasonString} ]\nSummon From : ${from}\nTime : [ ${time} ] **\n\n\`في حال ما ناسبك الوقت تواصل معي في الخاص لتغييره في الـ 24 ساعة المقبلة\``;
         document.getElementById('summonResult').value = m;
+    }
+
+    // Decisions functions
+    function filterDecisionReasons() {
+        let input = document.getElementById('decisionSearch').value.toLowerCase();
+        let select = document.getElementById('decisionReason');
+        let options = select.getElementsByTagName('option');
+        let groups = select.getElementsByTagName('optgroup');
+        for (let i = 0; i < options.length; i++) {
+            let txt = options[i].text.toLowerCase();
+            let val = options[i].value.toLowerCase();
+            options[i].style.display = (txt.includes(input) || val.includes(input)) ? "" : "none";
+        }
+        for (let g = 0; g < groups.length; g++) {
+            let visible = false;
+            let opts = groups[g].getElementsByTagName('option');
+            for (let o = 0; o < opts.length; o++) { if (opts[o].style.display !== "none") { visible = true; break; } }
+            groups[g].style.display = visible ? "" : "none";
+        }
+    }
+
+    function trackDecisionSelection(select) {
+        let currentValues = Array.from(select.selectedOptions).map(opt => opt.value);
+        currentValues.forEach(val => { if (!selectedDecisionOrder.includes(val)) selectedDecisionOrder.push(val); });
+        selectedDecisionOrder = selectedDecisionOrder.filter(val => currentValues.includes(val));
+        updateDecisionReply();
+    }
+
+    function undoDecisionSelection() {
+        if (selectedDecisionOrder.length > 0) {
+            selectedDecisionOrder.pop();
+            let select = document.getElementById('decisionReason');
+            for (let opt of select.options) opt.selected = selectedDecisionOrder.includes(opt.value);
+            updateDecisionReply();
+        }
+    }
+
+    function resetDecisionSelection() {
+        selectedDecisionOrder = [];
+        document.getElementById('decisionSearch').value = "";
+        filterDecisionReasons();
+        let select = document.getElementById('decisionReason');
+        for (let opt of select.options) opt.selected = false;
+        document.getElementById('decisionMedicID').value = "";
+        document.getElementById('decisionPenalty').value = "";
+        document.getElementById('decisionNote').value = "";
+        document.getElementById('decisionNumber').value = "";
+        document.getElementById('decisionResult').value = "";
+        updateDecisionReply();
+    }
+
+    function updateDecisionReply() {
+        const medicId = document.getElementById('decisionMedicID').value.trim();
+        const penalty = document.getElementById('decisionPenalty').value.trim() || "عقوبة إدارية";
+        const reasonString = selectedDecisionOrder.length > 0 ? selectedDecisionOrder.join(' + ') : "لم يتم تحديد سبب";
+        const note = document.getElementById('decisionNote').value.trim();
+        const decisionNum = document.getElementById('decisionNumber').value.trim() || "قرار غير مرقم";
+        const issuer = document.getElementById('decisionIssuer').value;
+        const mention = medicId ? `<@${medicId}>` : "المسعف";
+        
+        let finalMsg = `**📋 قرار إداري رقم (${decisionNum})
+  
+${issuer}
+  
+المسعف: ${mention}
+  
+العقوبة: ${penalty}
+  
+سبب القرار: ${reasonString}
+  
+${note ? `ملاحظات: ${note}\n` : ""}
+تم إصدار هذا القرار بناءً على ما ثبت من مخالفات للأنظمة واللوائح.  
+على المسعف الالتزام بالقرار ومراجعة الإدارة عند الحاجة.  
+**`;
+        document.getElementById('decisionResult').value = finalMsg;
     }
 
     async function copyFinalText(aId, bId) {
