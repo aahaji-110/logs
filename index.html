@@ -864,7 +864,11 @@ ${detailText}
         let mentions = [];
         inputs.forEach(input => { if(input.value.trim() !== "") mentions.push(`<@${input.value.trim()}>`); });
         const mentionString = mentions.length > 0 ? mentions.join(' + ') : "";
-        const reasonString = selectedOrder.length > 0 ? selectedOrder.join(' + ') : " ";
+        
+        // استخراج الرمز فقط لرقعة الاستدعاء (استخلاص ما قبل النقطتين : )
+        const codeOnlyArray = selectedOrder.map(item => item.split(':')[0].trim());
+        const reasonString = codeOnlyArray.length > 0 ? codeOnlyArray.join(' + ') : " ";
+        
         const time = document.getElementById('summonTime').value;
         const from = document.getElementById('summonFrom').value;
         let m = `**Name : [ ${mentionString} ]\nReason : [ ${reasonString} ]\nSummon From : ${from}\nTime : [ ${time} ] **\n\n\`في حال ما ناسبك الوقت تواصل معي في الخاص لتغييره في الـ 24 ساعة المقبلة\``;
