@@ -303,7 +303,7 @@
         <input type="text" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="this.value = this.value.replace(/[^0-9]/g, ''); liveUpdate30()">
         <button onclick="calculateHoursFinal()">حساب</button>
         <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
-        <button id="copyBtn1" class="copy-btn" onclick="copyFinalText('resultArea', 'copyBtn1')" style="display: none;">إرسال للخاص</button>
+        <button id="copyBtn1" class="copy-btn" onclick="copyFinalText('resultArea', 'copyBtn1')" style="display: none;">نسخ</button>
     </div>
 
     <div id="ticketTab" class="tab-content">
@@ -327,7 +327,7 @@
             </div>
         </div>
         <textarea id="ticketResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
-        <button id="copyBtn2" class="copy-btn" onclick="copyFinalText('ticketResult', 'copyBtn2')">إرسال للخاص</button>
+        <button id="copyBtn2" class="copy-btn" onclick="copyFinalText('ticketResult', 'copyBtn2')">نسخ الرد</button>
     </div>
 
     <div id="variousTab" class="tab-content">
@@ -360,7 +360,7 @@
         </div>
 
         <textarea id="variousResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
-        <button id="copyBtn3" class="copy-btn" onclick="copyFinalText('variousResult', 'copyBtn3')">إرسال للخاص</button>
+        <button id="copyBtn3" class="copy-btn" onclick="copyFinalText('variousResult', 'copyBtn3')">نسخ الرد</button>
     </div>
 
     <div id="summonTab" class="tab-content">
@@ -415,7 +415,7 @@
                 <option value="1-9">1-9: عدم اخذ اذن من الديسباتش للتوجه الى المطعم او الورشة</option>
                 <option value="1-10">1-10: لبس ملابس او اضافات (قبعة، نظاره، الخ) لا تليق بعملك كمسعف</option>
                 <option value="1-11">1-11: اضافة وشوم على الوجه او مستلزمات تشوه الوجه</option>
-                <option value="1-12">1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير</option>
+                <option value="1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير">1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير</option>
                 <option value="1-13">1-13: التأفيك او اخذ غفوه في الأماكن الغير مخصصه للتأفيك</option>
                 <option value="1-14">1-14: القصور في كتابة التقارير الطبية للمريض</option>
                 <option value="1-15">1-15: التجمع في اماكن عشوائيه وعدم التواجد عند الاستقبال</option>
@@ -517,7 +517,7 @@
         </select>
 
         <textarea id="summonResult" readonly placeholder="سيظهر الرد هنا..."></textarea>
-        <button id="copyBtn4" class="copy-btn" onclick="copyFinalText('summonResult', 'copyBtn4')">إرسال للخاص</button>
+        <button id="copyBtn4" class="copy-btn" onclick="copyFinalText('summonResult', 'copyBtn4')">نسخ الرد</button>
     </div>
 
     <div id="decisionsTab" class="tab-content">
@@ -670,7 +670,7 @@
         </select>
 
         <textarea id="decisionResult" class="decision-textarea" readonly placeholder="سيظهر القرار النهائي هنا..."></textarea>
-        <button id="copyBtn5" class="copy-btn" onclick="copyFinalText('decisionResult', 'copyBtn5')">إرسال للخاص</button>
+        <button id="copyBtn5" class="copy-btn" onclick="copyFinalText('decisionResult', 'copyBtn5')">نسخ القرار</button>
     </div>
 
     <div class="footer">
@@ -875,8 +875,8 @@ ${detailText}
     }
 
     function filterDecisionReasons() {
-        let input = document.getElementById('reasonSearch').value.toLowerCase();
-        let select = document.getElementById('summonReason');
+        let input = document.getElementById('decisionSearch').value.toLowerCase();
+        let select = document.getElementById('decisionReason');
         let options = select.getElementsByTagName('option');
         let groups = select.getElementsByTagName('optgroup');
         for (let i = 0; i < options.length; i++) {
@@ -971,50 +971,12 @@ ${reasonsText}
         const area = document.getElementById(aId);
         const btn = document.getElementById(bId);
         if(!area.value) return;
-
-        let userIds = [];
-
-        if (bId === 'copyBtn1') userIds.push(document.getElementById('copyID').value.trim());
-        else if (bId === 'copyBtn3') userIds.push(document.getElementById('medicID').value.trim());
-        else if (bId === 'copyBtn5') userIds.push(document.getElementById('decisionMedicID').value.trim());
-        else if (bId === 'copyBtn4') {
-            document.querySelectorAll('.medic-id-input').forEach(inp => {
-                if(inp.value.trim() !== '') userIds.push(inp.value.trim());
-            });
-        }
-        else if (bId === 'copyBtn2') {
-            let id = prompt("أدخل رقم دسكورد الشخص لإرسال الرد له في الخاص:");
-            if(id) userIds.push(id.trim());
-        }
-
-        if (userIds.length === 0 || userIds[0] === '') {
-            alert("يرجى إدخال رقم دسكورد المسعف أولاً!");
-            return;
-        }
-
-        const oldText = btn.innerText;
-        btn.innerText = "⏳ جاري الإرسال...";
-        btn.style.backgroundColor = "var(--warning)";
-
         try {
-            for (let id of userIds) {
-                await fetch('https://ExtraneousProfuseApache--aahaji110.replit.app/send-dm', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: id, messageText: area.value })
-                });
-            }
-            
-            btn.innerText = "✅ تم الإرسال للخاص!";
+            await navigator.clipboard.writeText(area.value);
+            const old = btn.innerText; btn.innerText = "✅ تم النسخ!";
             btn.style.backgroundColor = "#2d3d2a";
-            setTimeout(() => { btn.innerText = "إرسال للخاص"; btn.style.backgroundColor = "var(--success)"; }, 2500);
-            
-        } catch (e) {
-            alert("❌ خطأ: لم يتم الإرسال. تأكد أن البوت شغال في Replit.");
-            btn.innerText = "إعادة المحاولة";
-            btn.style.backgroundColor = "var(--danger)";
-            setTimeout(() => { btn.innerText = oldText; btn.style.backgroundColor = "var(--success)"; }, 3000);
-        }
+            setTimeout(() => { btn.innerText = old; btn.style.backgroundColor = "var(--success)"; }, 2000);
+        } catch (e) { alert("خطأ في النسخ"); }
     }
 </script>
 </body>
