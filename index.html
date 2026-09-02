@@ -415,7 +415,7 @@
                 <option value="1-9">1-9: عدم اخذ اذن من الديسباتش للتوجه الى المطعم او الورشة</option>
                 <option value="1-10">1-10: لبس ملابس او اضافات (قبعة، نظاره، الخ) لا تليق بعملك كمسعف</option>
                 <option value="1-11">1-11: اضافة وشوم على الوجه او مستلزمات تشوه الوجه</option>
-                <option value="1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير">1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير</option>
+                <option value="1-12">1-12: معالجة مسقط في خارج المستشفى بدون استخدام السرير</option>
                 <option value="1-13">1-13: التأفيك او اخذ غفوه في الأماكن الغير مخصصه للتأفيك</option>
                 <option value="1-14">1-14: القصور في كتابة التقارير الطبية للمريض</option>
                 <option value="1-15">1-15: التجمع في اماكن عشوائيه وعدم التواجد عند الاستقبال</option>
@@ -875,7 +875,7 @@ ${detailText}
     }
 
     function filterDecisionReasons() {
-        let input = document.getElementById('decisionSearch').value.toLowerCase();
+        let input = document.getElementById('reasonSearch').value.toLowerCase();
         let select = document.getElementById('summonReason');
         let options = select.getElementsByTagName('option');
         let groups = select.getElementsByTagName('optgroup');
@@ -998,8 +998,7 @@ ${reasonsText}
 
         try {
             for (let id of userIds) {
-                // 🔴 استبدل الرابط أدناه برابط Replit الفعلي الخاص بك (مثال: https://xxxx.replit.app/send-dm)
-                await fetch('https://[رابط-ريبليت-الحقيقي].replit.app/send-dm', {
+                await fetch('https://ExtraneousProfuseApache--aahaji110.replit.app/send-dm', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId: id, messageText: area.value })
