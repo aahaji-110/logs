@@ -275,38 +275,13 @@
     <div class="separator"></div>
     
     <div class="tabs-header">
-        <div class="tab-link active" onclick="openTab(event, 'calcTab')">logs Calculator</div>
-        <div class="tab-link" onclick="openTab(event, 'ticketTab')">Ticket Replies</div>
+        <div class="tab-link active" onclick="openTab(event, 'ticketTab')">Ticket Replies</div>
         <div class="tab-link" onclick="openTab(event, 'variousTab')">Various Replies</div>
         <div class="tab-link" onclick="openTab(event, 'summonTab')">Summon</div>
         <div class="tab-link" onclick="openTab(event, 'decisionsTab')">Decisions</div>
     </div>
 
-    <div id="calcTab" class="tab-content active">
-        <h2>حاسبة ساعات المسعفين</h2>
-        <span class="label">رقم دسكورد مسؤول الاكاديمية :</span>
-        <input type="text" id="adminID" placeholder="أدخل الرقم هنا" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-        
-        <span class="label">رقم دسكورد المسعف :</span>
-        <input type="text" id="copyID" placeholder="أدخل الرقم هنا" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-        
-        <span class="label">نوع الحسبة:</span>
-        <div class="calc-options">
-            <label class="option-item"><input type="radio" name="calcType" value="weekly" checked onclick="handleCalcTypeChange(false)"> حسبة أسبوعية</label>
-            <label class="option-item"><input type="radio" name="calcType" value="30hours" onclick="handleCalcTypeChange(true)"> حسبة 30 ساعة</label>
-        </div>
-        <div id="progressWrapper">
-            <div id="progressContainer"><div id="progressBar">0%</div></div>
-            <div id="remainingText"></div>
-        </div>
-        <span class="label">عدد اللوقات:</span>
-        <input type="text" id="logsCount" placeholder="أدخل مجموع اللوقات" oninput="this.value = this.value.replace(/[^0-9]/g, ''); liveUpdate30()">
-        <button onclick="calculateHoursFinal()">حساب</button>
-        <textarea id="resultArea" readonly placeholder="سيظهر النص هنا..."></textarea>
-        <button id="copyBtn1" class="copy-btn" onclick="copyFinalText('resultArea', 'copyBtn1')" style="display: none;">نسخ</button>
-    </div>
-
-    <div id="ticketTab" class="tab-content">
+    <div id="ticketTab" class="tab-content active">
         <h2>ردود التكت</h2>
         <span class="label">الاسم (الموظف):</span>
         <input type="text" id="staffName1" placeholder="أدخل اسمك" oninput="updateTicketReply()">
@@ -751,67 +726,6 @@
         `;
         document.getElementById('summonResult').value = "";
         updateSummonReply();
-    }
-
-    function handleCalcTypeChange(show) {
-        document.getElementById('progressWrapper').style.display = show ? 'block' : 'none';
-        liveUpdate30();
-    }
-
-    function liveUpdate30() {
-        const logs = document.getElementById('logsCount').value;
-        const type = document.querySelector('input[name="calcType"]:checked').value;
-        const bar = document.getElementById('progressBar');
-        const rem = document.getElementById('remainingText');
-        if (type === "30hours" && logs !== "" && logs >= 0) {
-            let hours = Math.round(parseFloat(logs) / 12);
-            let percent = Math.min(Math.round((hours / 30) * 100), 100);
-            let left = Math.max(30 - hours, 0);
-            bar.style.width = percent + '%';
-            bar.innerText = hours + " ساعة (" + percent + "%)";
-            rem.innerText = left > 0 ? `باقي لك ${left} ساعة للوصول لـ 30` : "✅ تم إكمال الـ 30 ساعة بنجاح!";
-        }
-    }
-
-    function calculateHoursFinal() {
-        const adminId = document.getElementById('adminID').value.trim() || "00000";
-        const medicId = document.getElementById('copyID').value.trim() || "00000";
-        const logs = document.getElementById('logsCount').value;
-        const type = document.querySelector('input[name="calcType"]:checked').value;
-        
-        if (logs === "" || logs < 0) { alert("يرجى إدخال عدد لوقات صحيح"); return; }
-        
-        let h = Math.round(parseFloat(logs) / 12);
-        
-        let hourText = "";
-        if (h === 1) {
-            hourText = "ساعة واحدة";
-        } else if (h === 2) {
-            hourText = "ساعتين";
-        } else if (h >= 3 && h <= 10) {
-            hourText = h + " ساعات";
-        } else {
-            hourText = h + " ساعة";
-        }
-
-        let detailText = (type === "weekly") 
-            ? "نفيدكم بعدد ساعاتك لهذا الاسبوع حتى تاريخ طلب المناقشة" 
-            : "نفيدكم بعدد ساعاتك الشهريه لمتطلبات الاستجداد حتى تاريخ طلب المناقشة";
-
-        let finalMsg = `**- اكاديمية الصحه EMS Academy
- 
-حياك الله معك ( <@${adminId}> ) من اكاديمية الصحة 
- 
-${detailText}
- 
-هي ( ${hourText} ) 
- 
-شاكرين لك اهتمامك ونتطلع للمزيد من الحماس 
- 
-<@${medicId}>**`;
-
-        document.getElementById('resultArea').value = finalMsg;
-        document.getElementById('copyBtn1').style.display = 'block';
     }
 
     function updateTicketReply() {
